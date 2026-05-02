@@ -1,0 +1,20 @@
+.DS_Store
+*.log
+*.sqlite3
+*.pyc
+__pycache__/
+.pytest_cache/
+
+# Python virtual environments
+venv/
+.venv/
+backend/venv/
+
+# Django runtime files
+backend/db.sqlite3
+backend/media/
+backend/staticfiles/
+
+# Local environment values
+.env
+backend/.env
