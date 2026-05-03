@@ -1,59 +1,101 @@
-# Frontend
+# E-Commerce (Person 2 Scope) - Django + Angular
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.2.4.
+This project is now focused **only** on Person 2 requirements:
 
-## Development server
+- Categories
+- Product listing
+- Product details
+- Product images
+- Price and stock availability
+- Search
+- Filters
+- Pagination
 
-To start a local development server, run:
+Project structure:
 
-```bash
-ng serve
-```
+- `backend/` Django + DRF APIs
+- `frontend/` Angular UI
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
-
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
-
-```bash
-ng generate component component-name
-```
-
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+## Backend setup
 
 ```bash
-ng generate --help
+cd backend
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+python manage.py makemigrations
+python manage.py migrate
+python manage.py seed_data
+python manage.py createsuperuser
+python manage.py runserver
 ```
 
-## Building
+Backend URL: `http://127.0.0.1:8000`
+Admin URL: `http://127.0.0.1:8000/admin`
 
-To build the project run:
+### Available APIs
+
+- `GET /api/categories/`
+- `GET /api/categories/<slug>/`
+- `GET /api/products/`
+- `GET /api/products/<id>/`
+
+### Products endpoint query parameters
+
+- `search=<text>` search in product name, description, category name
+- `category=<category_id>`
+- `min_price=<number>`
+- `max_price=<number>`
+- `in_stock=true`
+- `ordering=price | -price | created_at | -created_at | stock | -stock | name`
+- `page=<number>`
+
+## Frontend setup
 
 ```bash
-ng build
+cd frontend
+npm install
+npm start
 ```
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+Frontend URL: `http://localhost:4200`
 
-## Running unit tests
+## Run full project together
 
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
+Open two terminals.
 
+Terminal A:
 ```bash
-ng test
+cd backend
+source .venv/bin/activate
+python manage.py runserver
 ```
 
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
+Terminal B:
 ```bash
-ng e2e
+cd frontend
+npm start
 ```
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+Then open `http://localhost:4200`.
 
-## Additional Resources
+## What you should see
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+1. Home page with product cards.
+2. Filter panel with:
+   - search
+   - category filter
+   - min/max price
+   - in-stock toggle
+   - sorting
+3. Pagination controls (Prev/Next).
+4. Click `View Details` opens full product details page with image gallery, description, category, price, and stock.
+
+## Demo flow for presentation
+
+1. Start with all products.
+2. Search by keyword.
+3. Apply category and price filters.
+4. Switch sort order (price low/high).
+5. Enable `in stock only`.
+6. Open one product details page and show multi-image gallery.
