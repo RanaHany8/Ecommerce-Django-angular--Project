@@ -9,7 +9,6 @@ import { StoreService } from '../../services/store.service';
   standalone: true,
   imports: [CommonModule, RouterLink],
   template: `
-    <!-- Navbar المتطور الموحد -->
     <nav class="glass-navbar">
       <div class="container-custom nav-flex">
         <div class="brand" routerLink="/">
@@ -34,12 +33,10 @@ import { StoreService } from '../../services/store.service';
     </nav>
 
     <div class="luxury-wrapper">
-      <!-- الخلفية الموحدة -->
       <div class="dynamic-bg"></div>
       <div class="glass-mask"></div>
 
       <div class="container-custom main-wrapper">
-        <!-- زر العودة الأنيق -->
         <a routerLink="/" class="back-link group">
           <span class="icon">←</span>
           <span class="text">Back to Masterpieces</span>
@@ -48,11 +45,9 @@ import { StoreService } from '../../services/store.service';
         <div class="product-showcase animate-reveal" *ngIf="product">
           <div class="grid-layout">
             
-            <!-- معرض الصور الفني -->
             <div class="image-container relative overflow-hidden group">
               <img [src]="selectedImage" class="main-product-img" [alt]="product.name" />
               
-              <!-- مصغرات الصور (Thumbnails) -->
               <div class="thumbnails-overlay" *ngIf="product.images && product.images.length > 0">
                 <div *ngFor="let img of product.images" (click)="selectedImage = img.image_url"
                      class="thumb-card"
@@ -62,7 +57,6 @@ import { StoreService } from '../../services/store.service';
               </div>
             </div>
 
-            <!-- قسم تفاصيل المنتج -->
             <div class="info-container">
               <div class="info-content w-full">
                 <nav class="breadcrumb">{{ product.category.name }} / Details</nav>
@@ -109,7 +103,6 @@ import { StoreService } from '../../services/store.service';
       display: block;
     }
 
-    /* Navbar التنسيق الموحد */
     .glass-navbar {
       position: fixed;
       top: 0; left: 0; right: 0;
@@ -170,11 +163,10 @@ import { StoreService } from '../../services/store.service';
       font-weight: 800;
     }
 
-    /* النظام الخلفي الموحد */
     .luxury-wrapper {
       position: relative;
       min-height: 100vh;
-      padding-top: 100px; /* تعويض ارتفاع الناف بار */
+      padding-top: 100px; 
     }
 
     .dynamic-bg {
@@ -199,7 +191,6 @@ import { StoreService } from '../../services/store.service';
       padding-bottom: 5rem;
     }
 
-    /* زر العودة */
     .back-link {
       display: inline-flex;
       align-items: center;
@@ -221,7 +212,6 @@ import { StoreService } from '../../services/store.service';
     }
     .back-link:hover { transform: translateX(-8px); color: var(--primary); }
 
-    /* حاوية العرض الرئيسية */
     .product-showcase {
       background: var(--glass-white);
       border-radius: 40px;
@@ -235,7 +225,6 @@ import { StoreService } from '../../services/store.service';
       grid-template-columns: 1.4fr 1fr;
     }
 
-    /* قسم الصور */
     .image-container {
       height: 750px;
       background: #f8fafc;
@@ -270,7 +259,6 @@ import { StoreService } from '../../services/store.service';
     .thumb-card img { width: 100%; height: 100%; object-fit: cover; }
     .thumb-card.active { border-color: var(--primary); transform: translateY(-5px); }
 
-    /* قسم المعلومات */
     .info-container {
       padding: 4rem;
       display: flex;
@@ -307,7 +295,6 @@ import { StoreService } from '../../services/store.service';
       margin-bottom: 2.5rem;
     }
 
-    /* زر الشراء */
     .btn-primary {
       position: relative;
       width: 100%;
@@ -337,7 +324,6 @@ import { StoreService } from '../../services/store.service';
     .inventory-status .label { font-weight: 700; color: #94a3b8; font-size: 0.8rem; text-transform: uppercase; }
     .status-badge { font-weight: 800; color: var(--primary); }
 
-    /* أنيميشن الدخول */
     .animate-reveal {
       animation: fadeInUp 0.8s cubic-bezier(0.19, 1, 0.22, 1) both;
     }
