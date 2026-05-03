@@ -11,7 +11,6 @@ import { ProductQuery, StoreService } from '../../services/store.service';
   standalone: true,
   imports: [CommonModule, FormsModule, RouterLink],
   template: `
-    <!-- Navbar المتطور الجديد -->
     <nav class="glass-navbar">
       <div class="container nav-flex">
         <div class="brand" routerLink="/">
@@ -36,12 +35,10 @@ import { ProductQuery, StoreService } from '../../services/store.service';
     </nav>
 
     <div class="luxury-wrapper">
-      <!-- طبقة الخلفية المتحركة -->
       <div class="dynamic-bg"></div>
       <div class="glass-overlay"></div>
 
       <div class="container main-content">
-        <!-- Hero Section بتصميم سينمائي -->
         <header class="hero-section animate-reveal">
           <div class="hero-content">
             <span class="premium-tag">Exclusive Collection 2026</span>
@@ -53,7 +50,6 @@ import { ProductQuery, StoreService } from '../../services/store.service';
         </header>
 
         <div class="app-grid">
-          <!-- Sidebar: الـ Filters بتصميم زجاجي عصري -->
           <aside class="glass-sidebar animate-slide-in">
             <div class="filter-card">
               <div class="filter-header">
@@ -173,7 +169,6 @@ import { ProductQuery, StoreService } from '../../services/store.service';
         font-family: 'Plus Jakarta Sans', sans-serif;
       }
 
-      /* Navbar التنسيق الجديد */
       .glass-navbar {
         position: fixed;
         top: 0; left: 0; right: 0;
@@ -238,7 +233,6 @@ import { ProductQuery, StoreService } from '../../services/store.service';
         transition: 0.3s;
       }
 
-      /* 1. الخلفية العالمية المبهرة */
       .luxury-wrapper {
         min-height: 100vh;
         position: relative;
@@ -322,7 +316,7 @@ import { ProductQuery, StoreService } from '../../services/store.service';
       /* 4. Sidebar Glass Design */
       .glass-sidebar {
         position: sticky;
-        top: 100px; /* تظبيط مكان السايد بار مع الناف بار الثابت */
+        top: 100px; 
         background: var(--glass-bg);
         border: 1px solid rgba(255, 255, 255, 0.5);
         border-radius: 32px;
@@ -505,3 +499,4 @@ export class HomeComponent implements OnInit {
     (event.target as HTMLImageElement).src = this.fallbackImage;
   }
 }
+
