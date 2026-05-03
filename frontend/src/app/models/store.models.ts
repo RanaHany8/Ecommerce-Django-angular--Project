@@ -1,4 +1,3 @@
-// تأكدي إن أول سطر في الملف ده هو تعريف الـ interface وليس import
 export interface Category {
   id: number;
   name: string;
