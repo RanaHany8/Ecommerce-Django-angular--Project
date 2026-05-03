@@ -9,7 +9,6 @@ import { StoreService } from '../../services/store.service';
   standalone: true,
   imports: [CommonModule, RouterLink],
   template: `
-    <!-- Navbar المتطور الموحد -->
     <nav class="glass-navbar">
       <div class="container-custom nav-flex">
         <div class="brand" routerLink="/">
@@ -34,12 +33,10 @@ import { StoreService } from '../../services/store.service';
     </nav>
 
     <div class="luxury-wrapper">
-      <!-- الخلفية الموحدة -->
       <div class="dynamic-bg"></div>
       <div class="glass-mask"></div>
 
       <div class="container-custom main-wrapper">
-        <!-- زر العودة الأنيق -->
         <a routerLink="/" class="back-link group">
           <span class="icon">←</span>
           <span class="text">Back to Masterpieces</span>
@@ -48,11 +45,9 @@ import { StoreService } from '../../services/store.service';
         <div class="product-showcase animate-reveal" *ngIf="product">
           <div class="grid-layout">
             
-            <!-- معرض الصور الفني -->
             <div class="image-container relative overflow-hidden group">
               <img [src]="selectedImage" class="main-product-img" [alt]="product.name" />
               
-              <!-- مصغرات الصور (Thumbnails) -->
               <div class="thumbnails-overlay" *ngIf="product.images && product.images.length > 0">
                 <div *ngFor="let img of product.images" (click)="selectedImage = img.image_url"
                      class="thumb-card"
@@ -62,7 +57,6 @@ import { StoreService } from '../../services/store.service';
               </div>
             </div>
 
-            <!-- قسم تفاصيل المنتج -->
             <div class="info-container">
               <div class="info-content w-full">
                 <nav class="breadcrumb">{{ product.category.name }} / Details</nav>
