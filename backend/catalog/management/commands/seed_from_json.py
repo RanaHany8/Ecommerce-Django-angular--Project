@@ -117,3 +117,4 @@ class Command(BaseCommand):
                 f'Images uploaded: {uploaded_images}.'
             )
         )
+
