@@ -1,7 +1,6 @@
 from django.urls import path
-
-from .views import AccountsHealthView
+from .views import RegisterView
 
 urlpatterns = [
-    path("health/", AccountsHealthView.as_view(), name="accounts-health"),
+    path('register/', RegisterView.as_view()),
 ]
