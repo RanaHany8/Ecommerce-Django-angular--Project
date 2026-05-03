@@ -8,3 +8,4 @@ export const routes: Routes = [
   { path: 'products/:id', component: ProductDetailsComponent },
   { path: '**', redirectTo: '' },
 ];
+
