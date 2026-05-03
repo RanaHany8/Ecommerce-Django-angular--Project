@@ -91,7 +91,6 @@ class Command(BaseCommand):
         self.stdout.write(self.style.WARNING('🚀 Starting Seeding into MySQL with Direct URLs...'))
 
         with transaction.atomic():
-            # مسح البيانات القديمة
             ProductImage.objects.all().delete()
             Product.objects.all().delete()
             Category.objects.all().delete()
