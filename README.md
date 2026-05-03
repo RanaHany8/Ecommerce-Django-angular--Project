@@ -1,4 +1,4 @@
-# E-Commerce Project (Django + Angular)
+## E-Commerce Project (Django + Angular)
 
 Backend architecture is prepared for team collaboration with clear module boundaries and versioned APIs.
 
@@ -13,7 +13,7 @@ Backend architecture is prepared for team collaboration with clear module bounda
 - `orders/` order domain
 - `.env.example` shared environment template
 
-### API Routing Convention
+## API Routing Convention
 
 All backend APIs are exposed under:
 
