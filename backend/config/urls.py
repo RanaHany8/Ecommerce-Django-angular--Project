@@ -11,9 +11,10 @@ router.register(r'products', ProductViewSet, basename='product')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+
     path('api/', include(router.urls)),
+
     path('api/auth/', include('accounts.urls')),
-    path('api/auth/register/', include('accounts.urls')),
 
     path('api/auth/login/', TokenObtainPairView.as_view()),
     path('api/auth/refresh/', TokenRefreshView.as_view()),
