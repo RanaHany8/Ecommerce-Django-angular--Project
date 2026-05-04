@@ -1,1 +1,67 @@
-<p>register works!</p>
+<div class="auth-wrapper">
+  <div class="bg-overlay"></div>
+
+  <div class="auth-card animate-pop">
+
+    <div class="logo">
+      ✧ <span>ShopSphere</span>
+    </div>
+
+    <h2>Create Account</h2>
+    <p class="subtitle">Join the premium experience</p>
+
+    <form (ngSubmit)="register()" #form="ngForm">
+
+      <!-- Username -->
+      <div class="input-group">
+        <label>Username</label>
+        <input type="text" name="username" [(ngModel)]="model.username" required />
+      </div>
+
+      <!-- Email -->
+      <div class="input-group">
+        <label>Email</label>
+        <input type="email" name="email" [(ngModel)]="model.email" required />
+      </div>
+
+      <!-- Phone -->
+      <div class="input-group">
+        <label>Phone</label>
+        <input type="text" name="phone" [(ngModel)]="model.phone" />
+      </div>
+
+      <!-- Address -->
+      <div class="input-group">
+        <label>Address</label>
+        <input type="text" name="address" [(ngModel)]="model.address" />
+      </div>
+
+      <!-- Password -->
+      <div class="input-group">
+        <label>Password</label>
+        <input type="password" name="password" [(ngModel)]="model.password" required />
+      </div>
+
+      <!-- Confirm Password -->
+      <div class="input-group">
+        <label>Confirm Password</label>
+        <input type="password" name="confirmPassword" [(ngModel)]="model.confirmPassword" required />
+      </div>
+
+      <!-- Error -->
+      <p *ngIf="error" class="error">{{ error }}</p>
+
+      <!-- Button -->
+      <button type="submit" [disabled]="form.invalid || loading">
+        {{ loading ? 'Creating Account...' : 'Register' }}
+      </button>
+
+    </form>
+
+    <p class="footer-text">
+      Already have an account?
+      <a routerLink="/login">Login</a>
+    </p>
+
+  </div>
+</div>
