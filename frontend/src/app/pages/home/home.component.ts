@@ -132,6 +132,7 @@ import { ProductQuery, StoreService } from '../../services/store.service';
                 <div class="art-info">
                   <span class="art-cat">{{ product.category.name }}</span>
                   <h4 class="art-title">{{ product.name }}</h4>
+                  <p class="art-desc">{{ product.description }}</p>
                   <div class="art-meta">
                     <span class="art-price">{{ product.price | number : '1.2-2' }} <i>USD</i></span>
                   </div>
@@ -424,6 +425,17 @@ import { ProductQuery, StoreService } from '../../services/store.service';
       .art-info { padding: 1.2rem 0.5rem; }
       .art-cat { color: var(--accent); font-weight: 800; font-size: 0.75rem; text-transform: uppercase; }
       .art-title { font-size: 1.1rem; font-weight: 800; margin: 0.4rem 0; color: var(--text-main); }
+      .art-desc {
+        margin: 0 0 0.8rem;
+        color: #475569;
+        font-weight: 600;
+        font-size: 0.9rem;
+        line-height: 1.45;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+      }
       .art-price { font-size: 1.3rem; font-weight: 800; color: var(--accent); }
       .art-price i { font-style: normal; font-size: 0.8rem; color: #94a3b8; }
 
