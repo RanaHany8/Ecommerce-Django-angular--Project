@@ -8,6 +8,7 @@ from django.contrib.auth.models import User
 
 from .models import Profile
 from .serializers import RegisterSerializer, ProfileSerializer
+from rest_framework.generics import RetrieveUpdateAPIView
 
 
 class RegisterView(generics.CreateAPIView):
@@ -24,6 +25,11 @@ class ProfileView(generics.RetrieveUpdateAPIView):
         return self.request.user.profile
     
 
-class ProfileUpdateView(generics.UpdateAPIView):
-    queryset = Profile.objects.all()
+
+
+class ProfileUpdateView(RetrieveUpdateAPIView):
     serializer_class = ProfileSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_object(self):
+        return self.request.user.profile

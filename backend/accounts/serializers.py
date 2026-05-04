@@ -2,6 +2,8 @@ from django.contrib.auth.models import User
 from rest_framework import serializers
 
 from .models import Profile
+
+
 class RegisterSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True)
 
@@ -10,30 +12,62 @@ class RegisterSerializer(serializers.ModelSerializer):
         fields = ['username', 'email', 'password']
 
     def create(self, validated_data):
-        user = User.objects.create_user(
+        return User.objects.create_user(
             username=validated_data['username'],
             email=validated_data['email'],
             password=validated_data['password']
         )
-        return user
-    
+
+
 class ProfileSerializer(serializers.ModelSerializer):
-    username = serializers.CharField(source='user.username')
-    email = serializers.EmailField(source='user.email')
 
     class Meta:
         model = Profile
-        fields = ['id', 'username', 'email', 'phone', 'address']
+        fields = ['id', 'phone', 'address'] 
+
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+
+        data['username'] = instance.user.username
+        data['email'] = instance.user.email
+
+        return data
+
+
+    def validate(self, data):
+        user = self.instance.user if self.instance else None
+
+        username = self.initial_data.get('username')
+        email = self.initial_data.get('email')
+
+        if username:
+            if User.objects.exclude(id=user.id).filter(username=username).exists():
+                raise serializers.ValidationError({
+                    "username": "Username already exists"
+                })
+
+        if email:
+            if User.objects.exclude(id=user.id).filter(email=email).exists():
+                raise serializers.ValidationError({
+                    "email": "Email already exists"
+                })
+
+        return data
+
 
     def update(self, instance, validated_data):
-        user_data = validated_data.pop('user', {})
-
-
         user = instance.user
-        user.username = user_data.get('username', user.username)
-        user.email = user_data.get('email', user.email)
-        user.save()
 
+        username = self.initial_data.get('username')
+        email = self.initial_data.get('email')
+
+        if username:
+            user.username = username
+
+        if email:
+            user.email = email
+
+        user.save()
 
         instance.phone = validated_data.get('phone', instance.phone)
         instance.address = validated_data.get('address', instance.address)
