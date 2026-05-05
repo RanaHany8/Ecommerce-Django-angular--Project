@@ -30,6 +30,13 @@ import { ProductQuery, StoreService } from '../../services/store.service';
             <span class="cart-icon">🛒</span>
             <span class="count">0</span>
           </div>
+          <a *ngIf="isLoggedIn; else guestLinks" routerLink="/profile" class="user-pill">
+            👤 {{ currentUserName }}
+          </a>
+          <ng-template #guestLinks>
+            <a routerLink="/login" class="nav-auth">Login</a>
+            <a routerLink="/register" class="nav-auth">Register</a>
+          </ng-template>
         </div>
       </div>
     </nav>
@@ -220,6 +227,17 @@ import { ProductQuery, StoreService } from '../../services/store.service';
 
       .nav-meta { display: flex; align-items: center; gap: 1.5rem; }
       .icon-btn { background: none; border: none; font-size: 1.2rem; cursor: pointer; }
+      .user-pill, .nav-auth {
+        text-decoration: none;
+        color: var(--text-main);
+        font-weight: 700;
+      }
+      .user-pill {
+        background: rgba(99, 102, 241, 0.1);
+        border: 1px solid rgba(99, 102, 241, 0.35);
+        padding: 0.35rem 0.8rem;
+        border-radius: 999px;
+      }
 
       .cart-pill {
         background: var(--text-main);
@@ -454,6 +472,8 @@ import { ProductQuery, StoreService } from '../../services/store.service';
 export class HomeComponent implements OnInit {
   categories: Category[] = [];
   products: Product[] = [];
+  currentUserName = '';
+  isLoggedIn = false;
   fallbackImage = 'https://placehold.co/800x1000?text=Premium+Product';
   skeletons = Array.from({ length: 6 });
 
@@ -475,6 +495,8 @@ export class HomeComponent implements OnInit {
   constructor(private readonly store: StoreService) {}
 
   ngOnInit(): void {
+    this.currentUserName = localStorage.getItem('user_name') || '';
+    this.isLoggedIn = !!localStorage.getItem('access_token');
     this.store.getCategories().subscribe((categories) => (this.categories = categories));
     this.load();
   }

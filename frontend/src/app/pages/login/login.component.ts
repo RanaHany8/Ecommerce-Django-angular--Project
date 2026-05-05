@@ -35,6 +35,7 @@ export class LoginComponent {
       next: (res) => {
         localStorage.setItem('access_token', res.access);
         localStorage.setItem('refresh_token', res.refresh);
+        localStorage.setItem('user_name', res.user.username);
         this.loading = false;
         this.router.navigateByUrl('/');
       },
