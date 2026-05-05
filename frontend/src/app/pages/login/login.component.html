@@ -33,8 +33,10 @@
         />
       </div>
 
-      <button type="submit" [disabled]="form.invalid">
-        Login
+      <p *ngIf="error" class="error">{{ error }}</p>
+
+      <button type="submit" [disabled]="form.invalid || loading">
+        {{ loading ? 'Logging in...' : 'Login' }}
       </button>
 
     </form>

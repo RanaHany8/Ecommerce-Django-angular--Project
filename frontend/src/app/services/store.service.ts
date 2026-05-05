@@ -15,9 +15,20 @@ export interface ProductQuery {
   page?: number;
 }
 
+export interface LoginResponse {
+  access: string;
+  refresh: string;
+  user: {
+    id: number;
+    username: string;
+    email: string;
+  };
+}
+
 @Injectable({ providedIn: 'root' })
 export class StoreService {
   private readonly api = environment.apiUrl;
+  private readonly authApi = `${environment.apiUrl}/auth`;
 
   constructor(private readonly http: HttpClient) {}
 
@@ -42,11 +53,19 @@ export class StoreService {
     return this.http.get<ProductDetails>(`${this.api}/products/${id}/`);
   }
 
-  getProfile() {
-  return this.http.get('/api/auth/profile/');
-}
+  register(data: { username: string; email: string; password: string }) {
+    return this.http.post(`${this.authApi}/register/`, data);
+  }
 
-updateProfile(data: any) {
-  return this.http.put('/api/auth/profile/', data);
-}
+  login(data: { email: string; password: string }): Observable<LoginResponse> {
+    return this.http.post<LoginResponse>(`${this.authApi}/login/`, data);
+  }
+
+  getProfile() {
+    return this.http.get(`${this.authApi}/profile/`);
+  }
+
+  updateProfile(data: { username: string; email: string; phone: string; address: string }) {
+    return this.http.put(`${this.authApi}/profile/`, data);
+  }
 }
