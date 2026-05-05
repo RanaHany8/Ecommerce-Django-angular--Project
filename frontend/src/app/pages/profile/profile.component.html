@@ -1,1 +1,44 @@
 <p>profile works!</p>
+<div class="profile-wrapper">
+
+  <div class="profile-card">
+
+    <h2>My Profile ✨</h2>
+    <p>Manage your account information</p>
+
+    <div *ngIf="loading">Loading...</div>
+
+    <form *ngIf="!loading" (ngSubmit)="updateProfile()">
+
+      <div class="input-group">
+        <label>Username</label>
+        <input [(ngModel)]="user.username" name="username" />
+      </div>
+
+      <div class="input-group">
+        <label>Email</label>
+        <input [(ngModel)]="user.email" name="email" />
+      </div>
+
+      <div class="input-group">
+        <label>Phone</label>
+        <input [(ngModel)]="user.phone" name="phone" />
+      </div>
+
+      <div class="input-group">
+        <label>Address</label>
+        <input [(ngModel)]="user.address" name="address" />
+      </div>
+
+      <button type="submit">Update Profile</button>
+
+    </form>
+
+    <p class="success" *ngIf="success">{{ success }}</p>
+    <p class="error" *ngIf="error">{{ error }}</p>
+
+    <a routerLink="/" class="back">← Back to Home</a>
+
+  </div>
+
+</div>

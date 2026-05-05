@@ -41,4 +41,12 @@ export class StoreService {
   getProductDetails(id: number): Observable<ProductDetails> {
     return this.http.get<ProductDetails>(`${this.api}/products/${id}/`);
   }
+
+  getProfile() {
+  return this.http.get('/api/auth/profile/');
+}
+
+updateProfile(data: any) {
+  return this.http.put('/api/auth/profile/', data);
+}
 }
