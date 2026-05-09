@@ -11,36 +11,6 @@ import { ProductQuery, StoreService } from '../../services/store.service';
   standalone: true,
   imports: [CommonModule, FormsModule, RouterLink],
   template: `
-    <nav class="glass-navbar">
-      <div class="container nav-flex">
-        <div class="brand" routerLink="/">
-          <span class="logo-icon">✧</span>
-          Shop<span class="highlight">Sphere</span>
-        </div>
-        
-        <div class="nav-links">
-          <a routerLink="/" class="nav-item active">Curated Catalog</a>
-          <a routerLink="/collections" class="nav-item">Exclusives</a>
-          <a routerLink="/trends" class="nav-item">2026 Trends</a>
-        </div>
-
-        <div class="nav-meta">
-          <button class="icon-btn search-trigger">🔍</button>
-          <div class="cart-pill">
-            <span class="cart-icon">🛒</span>
-            <span class="count">0</span>
-          </div>
-          <a *ngIf="isLoggedIn; else guestLinks" routerLink="/profile" class="user-pill">
-            👤 {{ currentUserName }}
-          </a>
-          <ng-template #guestLinks>
-            <a routerLink="/login" class="nav-auth">Login</a>
-            <a routerLink="/register" class="nav-auth">Register</a>
-          </ng-template>
-        </div>
-      </div>
-    </nav>
-
     <div class="luxury-wrapper">
       <div class="dynamic-bg"></div>
       <div class="glass-overlay"></div>
@@ -286,7 +256,7 @@ import { ProductQuery, StoreService } from '../../services/store.service';
 
       /* 2. Hero Section */
       .hero-section {
-        padding: 9rem 0 4rem; /* زيادة المسافة من فوق عشان الـ Navbar */
+        padding: 6rem 0 4rem; /* زيادة المسافة من فوق عشان الـ Header العام */
         text-align: center;
       }
 

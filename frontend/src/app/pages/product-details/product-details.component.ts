@@ -9,29 +9,6 @@ import { StoreService } from '../../services/store.service';
   standalone: true,
   imports: [CommonModule, RouterLink],
   template: `
-    <nav class="glass-navbar">
-      <div class="container-custom nav-flex">
-        <div class="brand" routerLink="/">
-          <span class="logo-icon">✧</span>
-          Shop<span class="highlight">Sphere</span>
-        </div>
-        
-        <div class="nav-links">
-          <a routerLink="/" class="nav-item">Curated Catalog</a>
-          <a routerLink="/collections" class="nav-item">Exclusives</a>
-          <a routerLink="/trends" class="nav-item">2026 Trends</a>
-        </div>
-
-        <div class="nav-meta">
-          <button class="icon-btn search-trigger">🔍</button>
-          <div class="cart-pill">
-            <span class="cart-icon">🛒</span>
-            <span class="count">0</span>
-          </div>
-        </div>
-      </div>
-    </nav>
-
     <div class="luxury-wrapper">
       <div class="dynamic-bg"></div>
       <div class="glass-mask"></div>

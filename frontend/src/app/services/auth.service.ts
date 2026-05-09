@@ -1,5 +1,11 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { BehaviorSubject } from 'rxjs';
+
+export interface AuthState {
+  isLoggedIn: boolean;
+  username: string;
+}
 
 @Injectable({
   providedIn: 'root'
@@ -7,8 +13,12 @@ import { HttpClient } from '@angular/common/http';
 export class AuthService {
 
   private baseUrl = 'http://127.0.0.1:8000/api/auth/';
+  private authState = new BehaviorSubject<AuthState>({ isLoggedIn: false, username: '' });
+  readonly authState$ = this.authState.asObservable();
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) {
+    this.refreshAuthState();
+  }
 
   register(data: any) {
     return this.http.post(this.baseUrl + 'register/', data);
@@ -24,5 +34,21 @@ export class AuthService {
 
   updateProfile(data: any) {
     return this.http.put(this.baseUrl + 'profile/update/', data);
+  }
+
+  refreshAuthState(): void {
+    const token = localStorage.getItem('access_token');
+    const username = localStorage.getItem('user_name') || '';
+    this.authState.next({
+      isLoggedIn: !!token,
+      username,
+    });
+  }
+
+  logout(): void {
+    localStorage.removeItem('access_token');
+    localStorage.removeItem('refresh_token');
+    localStorage.removeItem('user_name');
+    this.refreshAuthState();
   }
 }

@@ -3,7 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Router, RouterLink } from '@angular/router';
-import { StoreService } from '../../services/store.service';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-login',
@@ -23,7 +23,7 @@ export class LoginComponent {
   error = '';
 
   constructor(
-    private readonly store: StoreService,
+    private readonly auth: AuthService,
     private readonly router: Router
   ) {}
 
@@ -31,11 +31,12 @@ export class LoginComponent {
     this.error = '';
     this.loading = true;
 
-    this.store.login(this.model).subscribe({
-      next: (res) => {
+    this.auth.login(this.model).subscribe({
+      next: (res: any) => {
         localStorage.setItem('access_token', res.access);
         localStorage.setItem('refresh_token', res.refresh);
         localStorage.setItem('user_name', res.user.username);
+        this.auth.refreshAuthState();
         this.loading = false;
         this.router.navigateByUrl('/');
       },

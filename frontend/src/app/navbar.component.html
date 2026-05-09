@@ -1,0 +1,40 @@
+<nav *ngIf="showNavbar" class="glass-navbar">
+  <div class="container nav-flex">
+    <a class="brand" routerLink="/">
+      <span class="logo-icon">✧</span>
+      Shop<span class="highlight">Sphere</span>
+    </a>
+
+    <div class="nav-links">
+      <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Curated Catalog</a>
+      <a routerLink="/collections" routerLinkActive="active">Exclusives</a>
+      <a routerLink="/trends" routerLinkActive="active">2026 Trends</a>
+    </div>
+
+    <div class="nav-meta">
+      <button class="icon-btn search-trigger" type="button" aria-label="Search">🔍</button>
+      <div class="cart-pill">
+        <span class="cart-icon">🛒</span>
+        <span class="count">0</span>
+      </div>
+
+      <ng-container *ngIf="isLoggedIn; else guestLinks">
+        <button class="user-pill" type="button" (click)="toggleDropdown()">
+          <span class="user-avatar">{{ avatarInitial }}</span>
+          <span class="user-name">{{ currentUserName }}</span>
+          <span class="chevron">▾</span>
+        </button>
+
+        <div *ngIf="menuOpen" class="dropdown-menu">
+          <a routerLink="/profile" (click)="menuOpen = false">Profile</a>
+          <button type="button" (click)="logout()">Logout</button>
+        </div>
+      </ng-container>
+
+      <ng-template #guestLinks>
+        <a routerLink="/login" routerLinkActive="active" class="nav-auth">Login</a>
+        <a routerLink="/register" routerLinkActive="active" class="nav-auth">Register</a>
+      </ng-template>
+    </div>
+  </div>
+</nav>

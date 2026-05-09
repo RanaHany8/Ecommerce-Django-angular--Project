@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Router, RouterLink } from '@angular/router';
 import { StoreService } from '../../services/store.service';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-profile',
@@ -27,7 +28,8 @@ export class ProfileComponent implements OnInit {
 
   constructor(
     private readonly store: StoreService,
-    private readonly router: Router
+    private readonly router: Router,
+    private readonly auth: AuthService
   ) {}
 
   ngOnInit(): void {
@@ -82,6 +84,7 @@ export class ProfileComponent implements OnInit {
         this.success = 'Profile updated successfully ✨';
         this.error = '';
         localStorage.setItem('user_name', this.user.username || '');
+        this.auth.refreshAuthState();
       },
       error: (err: HttpErrorResponse) => {
         if (err.status === 401) {
