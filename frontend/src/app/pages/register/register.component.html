@@ -10,37 +10,88 @@
     <h2>Create Account</h2>
     <p class="subtitle">Join the premium experience</p>
 
-    <form (ngSubmit)="register()" #form="ngForm">
+    <form (ngSubmit)="register(form)" #form="ngForm" novalidate>
 
       <!-- Username -->
       <div class="input-group">
         <label>Username</label>
-        <input type="text" name="username" [(ngModel)]="model.username" required />
+        <input
+          type="text"
+          name="username"
+          [(ngModel)]="model.username"
+          #username="ngModel"
+          required
+          minlength="3"
+          (blur)="username.control.markAsTouched()"
+        />
+        <p class="input-error" *ngIf="(username.invalid && (username.touched || submitted)) || usernameError">
+          <span *ngIf="username.errors?.required">Username is required.</span>
+          <span *ngIf="username.errors?.minlength">Username must be at least 3 characters.</span>
+          <span *ngIf="usernameError">{{ usernameError }}</span>
+        </p>
       </div>
 
       <!-- Email -->
       <div class="input-group">
         <label>Email</label>
-        <input type="email" name="email" [(ngModel)]="model.email" required />
+        <input
+          type="email"
+          name="email"
+          [(ngModel)]="model.email"
+          #email="ngModel"
+          required
+          email
+          (blur)="email.control.markAsTouched()"
+        />
+        <p class="input-error" *ngIf="(email.invalid && (email.touched || submitted)) || emailError">
+          <span *ngIf="email.errors?.required">Email is required.</span>
+          <span *ngIf="email.errors?.email">Enter a valid email address.</span>
+          <span *ngIf="emailError">{{ emailError }}</span>
+        </p>
       </div>
 
       <!-- Password -->
       <div class="input-group">
         <label>Password</label>
-        <input type="password" name="password" [(ngModel)]="model.password" required />
+        <input
+          type="password"
+          name="password"
+          [(ngModel)]="model.password"
+          #password="ngModel"
+          required
+          minlength="8"
+          pattern="(?=.*[A-Za-z])(?=.*[0-9])[A-Za-z0-9]{8,}"
+          (blur)="password.control.markAsTouched()"
+        />
+        <p class="input-error" *ngIf="password.invalid && (password.touched || submitted)">
+          <span *ngIf="password.errors?.required">Password is required.</span>
+          <span *ngIf="password.errors?.minlength">Password must be at least 8 characters.</span>
+          <span *ngIf="password.errors?.pattern">Password must include at least one letter and one number.</span>
+        </p>
       </div>
 
       <!-- Confirm Password -->
       <div class="input-group">
         <label>Confirm Password</label>
-        <input type="password" name="confirmPassword" [(ngModel)]="model.confirmPassword" required />
+        <input
+          type="password"
+          name="confirmPassword"
+          [(ngModel)]="model.confirmPassword"
+          #confirmPassword="ngModel"
+          required
+          (blur)="confirmPassword.control.markAsTouched()"
+        />
+        <p class="input-error" *ngIf="(confirmPassword.touched || submitted)">
+          <span *ngIf="confirmPassword.errors?.required">Confirm Password is required.</span>
+          <span *ngIf="!confirmPassword.errors && passwordsDoNotMatch">Passwords must match.</span>
+        </p>
       </div>
 
       <!-- Error -->
       <p *ngIf="error" class="error">{{ error }}</p>
 
       <!-- Button -->
-      <button type="submit" [disabled]="form.invalid || loading">
+      <button type="submit" [disabled]="form.invalid || passwordsDoNotMatch || loading">
         {{ loading ? 'Creating Account...' : 'Register' }}
       </button>
 

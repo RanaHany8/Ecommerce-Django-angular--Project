@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { HttpErrorResponse } from '@angular/common/http';
+import { NgForm, FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { StoreService } from '../../services/store.service';
 
@@ -23,7 +24,10 @@ export class RegisterComponent {
   };
 
   loading = false;
+  submitted = false;
   error = '';
+  usernameError = '';
+  emailError = '';
   success = '';
 
   constructor(
@@ -31,12 +35,18 @@ export class RegisterComponent {
     private readonly router: Router
   ) {}
 
-  register() {
+  get passwordsDoNotMatch(): boolean {
+    return this.model.password !== '' && this.model.confirmPassword !== '' && this.model.password !== this.model.confirmPassword;
+  }
+
+  register(form: NgForm) {
+    this.submitted = true;
     this.error = '';
+    this.usernameError = '';
+    this.emailError = '';
     this.success = '';
 
-    if (this.model.password !== this.model.confirmPassword) {
-      this.error = "Passwords do not match";
+    if (form.invalid || this.passwordsDoNotMatch) {
       return;
     }
 
@@ -53,9 +63,25 @@ export class RegisterComponent {
           this.loading = false;
           this.router.navigateByUrl('/login');
         },
-        error: () => {
-          this.error = 'Registration failed. Try another username/email.';
+        error: (err: HttpErrorResponse) => {
           this.loading = false;
+          const serverError = err.error || {};
+
+          if (serverError.username) {
+            this.usernameError = Array.isArray(serverError.username)
+              ? serverError.username[0]
+              : serverError.username;
+          }
+
+          if (serverError.email) {
+            this.emailError = Array.isArray(serverError.email)
+              ? serverError.email[0]
+              : serverError.email;
+          }
+
+          if (!this.usernameError && !this.emailError) {
+            this.error = serverError.detail || 'Registration failed. Please check your details and try again.';
+          }
         },
       });
   }

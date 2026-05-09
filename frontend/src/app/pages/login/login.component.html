@@ -9,7 +9,7 @@
     <h2>Welcome Back</h2>
     <p class="subtitle">Login to continue your premium experience</p>
 
-    <form (ngSubmit)="login()" #form="ngForm">
+    <form (ngSubmit)="login(form)" #form="ngForm" novalidate>
 
       <div class="input-group">
         <label>Email</label>
@@ -17,9 +17,16 @@
           type="email"
           name="email"
           [(ngModel)]="model.email"
+          #email="ngModel"
           required
+          email
           placeholder="Enter your email"
+          (blur)="email.control.markAsTouched()"
         />
+        <p class="input-error" *ngIf="email.invalid && (email.touched || submitted)">
+          <span *ngIf="email.errors?.required">Email is required.</span>
+          <span *ngIf="email.errors?.email">Enter a valid email address.</span>
+        </p>
       </div>
 
       <div class="input-group">
@@ -28,9 +35,14 @@
           type="password"
           name="password"
           [(ngModel)]="model.password"
+          #password="ngModel"
           required
           placeholder="Enter your password"
+          (blur)="password.control.markAsTouched()"
         />
+        <p class="input-error" *ngIf="password.invalid && (password.touched || submitted)">
+          <span *ngIf="password.errors?.required">Password is required.</span>
+        </p>
       </div>
 
       <p *ngIf="error" class="error">{{ error }}</p>

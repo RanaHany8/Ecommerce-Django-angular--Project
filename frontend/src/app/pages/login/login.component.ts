@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, NgForm } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Router, RouterLink } from '@angular/router';
@@ -20,6 +20,7 @@ export class LoginComponent {
   };
 
   loading = false;
+  submitted = false;
   error = '';
 
   constructor(
@@ -27,10 +28,15 @@ export class LoginComponent {
     private readonly router: Router
   ) {}
 
-  login() {
+  login(form: NgForm) {
+    this.submitted = true;
     this.error = '';
-    this.loading = true;
 
+    if (form.invalid) {
+      return;
+    }
+
+    this.loading = true;
     this.auth.login(this.model).subscribe({
       next: (res: any) => {
         localStorage.setItem('access_token', res.access);
@@ -42,7 +48,7 @@ export class LoginComponent {
       },
       error: (err: HttpErrorResponse) => {
         this.loading = false;
-        this.error = err.error?.detail || 'Login failed. Check server URL or credentials.';
+        this.error = err.error?.detail || 'Login failed. Check your credentials and try again.';
       },
     });
   }

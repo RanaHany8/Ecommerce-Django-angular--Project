@@ -102,6 +102,12 @@ button:disabled {
   cursor: not-allowed;
 }
 
+.input-error {
+  color: #dc2626;
+  font-size: 0.85rem;
+  margin-top: 0.3rem;
+}
+
 .footer-text {
   margin-top: 1.2rem;
   font-size: 0.85rem;
