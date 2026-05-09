@@ -23,6 +23,8 @@ INSTALLED_APPS = [
     'cloudinary',
     'catalog',
     'accounts',
+    'user_features',
+    'drf_yasg',
 ]
 
 MIDDLEWARE = [

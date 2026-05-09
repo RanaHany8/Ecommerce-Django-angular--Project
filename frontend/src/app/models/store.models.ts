@@ -43,3 +43,9 @@ export interface ApiListResponse<T> {
   previous: string | null;
   results: T[];
 }
+
+/** Wishlist row from GET /api/user/wishlist/ */
+export interface WishlistItem {
+  id: number;
+  product: Product;
+}
