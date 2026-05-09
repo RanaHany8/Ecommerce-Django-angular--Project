@@ -22,6 +22,7 @@ INSTALLED_APPS = [
     'cloudinary_storage',
     'cloudinary',
     'catalog',
+    'dashboard',
 ]
 
 MIDDLEWARE = [
@@ -59,7 +60,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'shopsphere_db',
         'USER': 'root',
-        'PASSWORD': '', 
+        'PASSWORD': '123456', 
         'HOST': '127.0.0.1', 
         'PORT': '3306',
         'OPTIONS': {
