@@ -13,4 +13,12 @@ export class AdminService {
   getStats(): Observable<AdminStats> {
     return this.http.get<AdminStats>(`${this.dashboardUrl}stats/`);
   }
+
+  getUsers(): Observable<AdminUser[]> {
+    return this.http.get<AdminUser[]>(`${this.dashboardUrl}users/`);
+  }
+
+  toggleUserStatus(userId: number): Observable<any> {
+    return this.http.patch(`${this.dashboardUrl}users/${userId}/`, {});
+  }
 }
