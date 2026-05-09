@@ -8,10 +8,13 @@ class ApiHealthView(APIView):
         return Response({"service": "backend", "status": "ok", "version": "v1"})
 
 
+
 urlpatterns = [
     path("health/", ApiHealthView.as_view(), name="api-health"),
     path("accounts/", include("accounts.urls")),
     path("products/", include("products.urls")),
     path("cart/", include("cart.urls")),
     path("orders/", include("orders.urls")),
+   
+    path("dashboard/", include("dashboard.urls")), 
 ]
