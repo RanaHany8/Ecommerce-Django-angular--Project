@@ -19,6 +19,7 @@
       </div>
 
       <ng-container *ngIf="isLoggedIn; else guestLinks">
+        <a routerLink="/wishlist" class="wishlist-nav" routerLinkActive="active" aria-label="Wishlist">♡</a>
         <button class="user-pill" type="button" (click)="toggleDropdown()">
           <span class="user-avatar">{{ avatarInitial }}</span>
           <span class="user-name">{{ currentUserName }}</span>

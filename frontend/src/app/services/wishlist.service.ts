@@ -20,9 +20,7 @@ export class WishlistService {
     private readonly auth: AuthService
   ) {
     this.auth.authState$.subscribe((state) => {
-      if (state.isLoggedIn) {
-        this.load().subscribe({ error: () => this.clearLocal() });
-      } else {
+      if (!state.isLoggedIn) {
         this.clearLocal();
       }
     });

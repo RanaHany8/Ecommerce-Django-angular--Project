@@ -5,6 +5,7 @@ import { ProductDetailsComponent } from './pages/product-details/product-details
 import { LoginComponent } from './pages/login/login.component';
 import { RegisterComponent } from './pages/register/register.component';
 import { ProfileComponent } from './pages/profile/profile.component';
+import { WishlistComponent } from './pages/wishlist/wishlist.component';
 
 export const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -12,6 +13,7 @@ export const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
   { path: 'profile', component: ProfileComponent },
+  { path: 'wishlist', component: WishlistComponent },
   { path: 'activate/:uid/:token',component: ActivateComponent},
 
   { path: '**', redirectTo: '' },

@@ -1,10 +1,13 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
+import { Subscription } from 'rxjs';
 
 import { Category, Product } from '../../models/store.models';
 import { ProductQuery, StoreService } from '../../services/store.service';
+import { AuthService } from '../../services/auth.service';
+import { WishlistService } from '../../services/wishlist.service';
 
 @Component({
   selector: 'app-home',
@@ -98,6 +101,19 @@ import { ProductQuery, StoreService } from '../../services/store.service';
               >
                 <div class="art-img-wrap">
                   <img [src]="product.primary_image || fallbackImage" [alt]="product.name" (error)="onImageError($event)" />
+                  <button
+                    type="button"
+                    class="wishlist-heart"
+                    [class.filled]="wishlistProductIds.has(product.id)"
+                    (click)="toggleWishlist(product, $event)"
+                    aria-label="Wishlist"
+                  >
+                    <svg viewBox="0 0 24 24" class="heart-svg" aria-hidden="true">
+                      <path
+                        d="M12 21s-6.716-4.5-9.5-8.5C1.5 10.5 2.5 7 5.5 5.5 7.5 4.5 10 5.5 12 8c2-2.5 4.5-3.5 6.5-2.5 3 1.5 4 5 2 7-2.784 4-9.5 8.5-9.5 8.5z"
+                      />
+                    </svg>
+                  </button>
                   <div class="art-overlay">
                     <span class="view-label">View Details</span>
                   </div>
@@ -390,6 +406,44 @@ import { ProductQuery, StoreService } from '../../services/store.service';
 
       .art-card:hover { transform: scale(1.03); background: rgba(255,255,255,0.9); }
 
+      .wishlist-heart {
+        position: absolute;
+        top: 12px;
+        right: 12px;
+        z-index: 5;
+        width: 44px;
+        height: 44px;
+        border: none;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.92);
+        box-shadow: 0 8px 24px rgba(15, 23, 42, 0.12);
+        cursor: pointer;
+        display: grid;
+        place-items: center;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+      }
+
+      .wishlist-heart:hover {
+        transform: scale(1.08);
+      }
+
+      .heart-svg {
+        width: 22px;
+        height: 22px;
+      }
+
+      .wishlist-heart .heart-svg path {
+        fill: transparent;
+        stroke: #ec4899;
+        stroke-width: 1.6;
+      }
+
+      .wishlist-heart.filled .heart-svg path {
+        fill: #ec4899;
+        stroke: #be185d;
+        stroke-width: 0.6;
+      }
+
       .art-img-wrap {
         height: 320px; border-radius: 22px; overflow: hidden;
         position: relative; background: #f1f5f9;
@@ -439,13 +493,15 @@ import { ProductQuery, StoreService } from '../../services/store.service';
     `,
   ],
 })
-export class HomeComponent implements OnInit {
+export class HomeComponent implements OnInit, OnDestroy {
   categories: Category[] = [];
   products: Product[] = [];
   currentUserName = '';
   isLoggedIn = false;
+  wishlistProductIds = new Set<number>();
   fallbackImage = 'https://placehold.co/800x1000?text=Premium+Product';
   skeletons = Array.from({ length: 6 });
+  private wishSub = new Subscription();
 
   page = 1;
   totalPages = 1;
@@ -462,13 +518,44 @@ export class HomeComponent implements OnInit {
     ordering: '-created_at',
   };
 
-  constructor(private readonly store: StoreService) {}
+  constructor(
+    private readonly store: StoreService,
+    private readonly wishlist: WishlistService,
+    private readonly router: Router,
+    private readonly auth: AuthService
+  ) {}
 
   ngOnInit(): void {
     this.currentUserName = localStorage.getItem('user_name') || '';
-    this.isLoggedIn = !!localStorage.getItem('access_token');
     this.store.getCategories().subscribe((categories) => (this.categories = categories));
     this.load();
+    this.wishSub.add(
+      this.auth.authState$.subscribe((s) => {
+        this.isLoggedIn = s.isLoggedIn;
+        if (s.isLoggedIn) {
+          this.wishlist.load().subscribe();
+        }
+      })
+    );
+    this.wishSub.add(
+      this.wishlist.items$.subscribe((items) => {
+        this.wishlistProductIds = new Set(items.map((i) => i.product.id));
+      })
+    );
+  }
+
+  ngOnDestroy(): void {
+    this.wishSub.unsubscribe();
+  }
+
+  toggleWishlist(product: Product, event: Event): void {
+    event.preventDefault();
+    event.stopPropagation();
+    if (!localStorage.getItem('access_token')) {
+      void this.router.navigate(['/login']);
+      return;
+    }
+    this.wishlist.toggle(product.id).subscribe();
   }
 
   apply() { this.page = 1; this.load(); }

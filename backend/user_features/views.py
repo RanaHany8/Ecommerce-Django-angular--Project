@@ -6,9 +6,9 @@ from .serializers import WishlistSerializer
 
 
 class WishlistListCreateView(generics.ListCreateAPIView):
-
     serializer_class = WishlistSerializer
     permission_classes = [permissions.IsAuthenticated]
+    pagination_class = None
 
     def get_queryset(self):
         return (
