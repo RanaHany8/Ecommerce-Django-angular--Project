@@ -1,5 +1,5 @@
 import { Routes } from '@angular/router';
-
+import { ActivateComponent } from './pages/activate/activate.component';
 import { HomeComponent } from './pages/home/home.component';
 import { ProductDetailsComponent } from './pages/product-details/product-details.component';
 import { LoginComponent } from './pages/login/login.component';
@@ -12,6 +12,7 @@ export const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
   { path: 'profile', component: ProfileComponent },
+  { path: 'activate/:uid/:token',component: ActivateComponent},
 
   { path: '**', redirectTo: '' },
 ];

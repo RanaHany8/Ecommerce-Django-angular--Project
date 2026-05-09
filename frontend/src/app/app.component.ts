@@ -16,7 +16,10 @@ import { NavbarComponent } from './navbar.component';
   styles: [
     `
       .main-shell {
+        position: relative;
+        z-index: 0;
         width: 100%;
+        min-height: calc(100vh - 5.5rem);
         padding: 7rem 0 2rem;
       }
     `,

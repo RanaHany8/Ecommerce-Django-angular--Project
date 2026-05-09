@@ -1,0 +1,35 @@
+<div class="luxury-wrapper">
+
+  <div class="dynamic-bg"></div>
+  <div class="glass-mask"></div>
+
+  <div class="container-custom main-wrapper">
+
+    <div class="activation-card animate-reveal">
+
+      <div *ngIf="phase === 'loading'" class="state-box">
+        <div class="spinner"></div>
+        <h2>Activating your account...</h2>
+        <p>Please wait a moment</p>
+      </div>
+
+      <div *ngIf="phase === 'success'" class="state-box success">
+        <div class="icon">✔</div>
+        <h2>Account Activated</h2>
+        <p>{{ message }}</p>
+
+        <a routerLink="/login" class="btn-primary">Go to Login</a>
+      </div>
+
+      <div *ngIf="phase === 'error'" class="state-box error">
+        <div class="icon">✖</div>
+        <h2>Activation Failed</h2>
+        <p>{{ message }}</p>
+
+        <a routerLink="/register" class="btn-primary">Try Again</a>
+      </div>
+
+    </div>
+
+  </div>
+</div>
