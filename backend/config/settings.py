@@ -67,7 +67,7 @@ DATABASES = {
         'NAME': 'shopsphere_db',
         'USER': 'root', 
 
-        'PASSWORD': '123456', 
+        'PASSWORD': '1234', 
         'HOST': '127.0.0.1', 
         'PORT': '3306',
         'OPTIONS': {

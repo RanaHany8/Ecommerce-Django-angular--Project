@@ -28,4 +28,9 @@ urlpatterns = [
     path('api/', include(router.urls)),
 
     path('api/auth/', include('accounts.urls')),
+
+    path('api/user/', include('user_features.urls')),
+    
+    path('swagger/', schema_view.with_ui('swagger', cache_timeout=0)),
+
 ]
