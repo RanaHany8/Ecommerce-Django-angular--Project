@@ -10,5 +10,6 @@ router.register(r'products', ProductViewSet, basename='product')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/', include(router.urls)),
+  path('api/', include('config.api_urls')),
+    path("dashboard/", include("dashboard.urls")),
 ]
