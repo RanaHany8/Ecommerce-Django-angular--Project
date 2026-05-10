@@ -35,6 +35,19 @@ export interface ProductDetails {
   category: Category;
   images: ProductImage[];
   created_at: string;
+  /** Average 1–5 from reviews; null if none */
+  average_rating?: number | null;
+  review_count?: number;
+}
+
+/** Row from /api/user/reviews/ */
+export interface ProductReview {
+  id: number;
+  username: string;
+  product: number;
+  rating: number;
+  comment: string;
+  created_at: string;
 }
 
 export interface ApiListResponse<T> {

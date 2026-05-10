@@ -1,3 +1,4 @@
+from django.db.models import Avg, Count
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters, viewsets
 
@@ -26,6 +27,11 @@ class ProductViewSet(viewsets.ReadOnlyModelViewSet):
 
     def get_queryset(self):
         queryset = super().get_queryset()
+        if self.action == 'retrieve':
+            queryset = queryset.annotate(
+                avg_rating=Avg('reviews__rating'),
+                review_count=Count('reviews', distinct=True),
+            )
         min_price = self.request.query_params.get('min_price')
         max_price = self.request.query_params.get('max_price')
         in_stock = self.request.query_params.get('in_stock')

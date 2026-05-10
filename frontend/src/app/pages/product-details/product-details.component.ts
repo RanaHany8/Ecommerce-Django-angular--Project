@@ -7,11 +7,12 @@ import { ProductDetails } from '../../models/store.models';
 import { AuthService } from '../../services/auth.service';
 import { StoreService } from '../../services/store.service';
 import { WishlistService } from '../../services/wishlist.service';
+import { ProductReviewsComponent } from '../../components/product-reviews/product-reviews.component';
 
 @Component({
   selector: 'app-product-details',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, ProductReviewsComponent],
   template: `
     <div class="luxury-wrapper">
       <div class="dynamic-bg"></div>
@@ -50,6 +51,15 @@ import { WishlistService } from '../../services/wishlist.service';
 
                 <p class="product-desc">{{ product.description }}</p>
 
+                <button type="button" class="reviews-jump" (click)="scrollToReviews()">
+                  <span class="reviews-jump-stars" aria-hidden="true">★★★★★</span>
+                  <span>Reviews & ratings</span>
+                  <span class="reviews-jump-badge" *ngIf="(product.review_count ?? 0) > 0">
+                    {{ product.review_count }} · {{ (product.average_rating ?? 0) | number : '1.1-1' }} avg
+                  </span>
+                  <span class="reviews-jump-badge muted" *ngIf="(product.review_count ?? 0) === 0">Be the first</span>
+                </button>
+
                 <div class="action-zone">
                   <div class="action-row">
                     <button type="button" class="btn-wishlist" [class.filled]="inWishlist" (click)="toggleWishlist($event)" aria-label="Wishlist">
@@ -75,6 +85,15 @@ import { WishlistService } from '../../services/wishlist.service';
             </div>
 
           </div>
+        </div>
+
+        <div id="product-reviews" class="reviews-anchor-target" *ngIf="product">
+          <app-product-reviews
+            [productId]="product.id"
+            [averageRating]="product.average_rating ?? null"
+            [reviewCount]="product.review_count ?? 0"
+            (statsChanged)="onReviewsStatsChanged()"
+          />
         </div>
       </div>
     </div>
@@ -281,7 +300,51 @@ import { WishlistService } from '../../services/wishlist.service';
       font-size: 1.05rem;
       line-height: 1.7;
       color: #475569;
-      margin-bottom: 2.5rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .reviews-jump {
+      display: inline-flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.5rem 0.75rem;
+      margin: 0 0 1.75rem;
+      padding: 0.7rem 1.15rem;
+      border-radius: 999px;
+      border: 1px solid rgba(99, 102, 241, 0.4);
+      background: rgba(99, 102, 241, 0.1);
+      color: var(--primary);
+      font-weight: 800;
+      font-size: 0.88rem;
+      cursor: pointer;
+      font-family: inherit;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .reviews-jump:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 28px rgba(99, 102, 241, 0.2);
+    }
+
+    .reviews-jump-stars {
+      letter-spacing: -0.08em;
+      color: #f59e0b;
+      font-size: 0.85rem;
+    }
+
+    .reviews-jump-badge {
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--dark);
+      opacity: 0.85;
+    }
+
+    .reviews-jump-badge.muted {
+      color: #64748b;
+    }
+
+    .reviews-anchor-target {
+      scroll-margin-top: 6.5rem;
     }
 
     .action-row {
@@ -453,5 +516,23 @@ export class ProductDetailsComponent implements OnInit, OnDestroy {
       return;
     }
     this.inWishlist = this.wishlist.isInWishlist(this.product.id);
+  }
+
+  onReviewsStatsChanged(): void {
+    if (!this.product) {
+      return;
+    }
+    const id = this.product.id;
+    this.store.getProductDetails(id).subscribe({
+      next: (res) => {
+        this.product = res;
+        this.syncWishlistState();
+      },
+      error: (err) => console.error('Error refreshing product:', err),
+    });
+  }
+
+  scrollToReviews(): void {
+    document.getElementById('product-reviews')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 }
