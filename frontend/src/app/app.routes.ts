@@ -14,6 +14,13 @@ export const routes: Routes = [
   { path: 'profile', component: ProfileComponent },
   { path: 'activate/:uid/:token',component: ActivateComponent},
 
+  { 
+    path: 'admin', 
+    children: [
+      { path: 'dashboard', component: AdminDashboardComponent },
+      { path: 'users', component: UsersComponent },
+      { path: 'products', component: AdminProductsComponent },
+    ]
+  },
   { path: '**', redirectTo: '' },
 ];
-
