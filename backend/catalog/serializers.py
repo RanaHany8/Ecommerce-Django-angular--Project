@@ -45,6 +45,8 @@ class ProductDetailSerializer(serializers.ModelSerializer):
     category = CategorySerializer(read_only=True)
     images = ProductImageSerializer(many=True, read_only=True)
     image = serializers.SerializerMethodField()
+    average_rating = serializers.SerializerMethodField()
+    review_count = serializers.SerializerMethodField()
 
     class Meta:
         model = Product
@@ -61,8 +63,19 @@ class ProductDetailSerializer(serializers.ModelSerializer):
             'category',
             'images',
             'created_at',
+            'average_rating',
+            'review_count',
         ]
 
     def get_image(self, obj):
         primary = obj.images.filter(is_primary=True).first() or obj.images.first()
         return primary.image_url if primary else None
+
+    def get_average_rating(self, obj):
+        val = getattr(obj, 'avg_rating', None)
+        if val is None:
+            return None
+        return round(float(val), 2)
+
+    def get_review_count(self, obj):
+        return getattr(obj, 'review_count', 0) or 0

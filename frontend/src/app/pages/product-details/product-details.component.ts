@@ -1,13 +1,18 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { Subscription } from 'rxjs';
+
 import { ProductDetails } from '../../models/store.models';
+import { AuthService } from '../../services/auth.service';
 import { StoreService } from '../../services/store.service';
+import { WishlistService } from '../../services/wishlist.service';
+import { ProductReviewsComponent } from '../../components/product-reviews/product-reviews.component';
 
 @Component({
   selector: 'app-product-details',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, ProductReviewsComponent],
   template: `
     <div class="luxury-wrapper">
       <div class="dynamic-bg"></div>
@@ -46,11 +51,28 @@ import { StoreService } from '../../services/store.service';
 
                 <p class="product-desc">{{ product.description }}</p>
 
+                <button type="button" class="reviews-jump" (click)="scrollToReviews()">
+                  <span class="reviews-jump-stars" aria-hidden="true">★★★★★</span>
+                  <span>Reviews & ratings</span>
+                  <span class="reviews-jump-badge" *ngIf="(product.review_count ?? 0) > 0">
+                    {{ product.review_count }} · {{ (product.average_rating ?? 0) | number : '1.1-1' }} avg
+                  </span>
+                  <span class="reviews-jump-badge muted" *ngIf="(product.review_count ?? 0) === 0">Be the first</span>
+                </button>
+
                 <div class="action-zone">
-                  <button class="btn-primary">
-                    <span class="btn-text">Acquire This Piece</span>
-                    <span class="btn-glow"></span>
-                  </button>
+                  <div class="action-row">
+                    <button type="button" class="btn-wishlist" [class.filled]="inWishlist" (click)="toggleWishlist($event)" aria-label="Wishlist">
+                      <svg viewBox="0 0 24 24" class="heart-svg" aria-hidden="true">
+                        <path d="M12 21s-6.716-4.5-9.5-8.5C1.5 10.5 2.5 7 5.5 5.5 7.5 4.5 10 5.5 12 8c2-2.5 4.5-3.5 6.5-2.5 3 1.5 4 5 2 7-2.784 4-9.5 8.5-9.5 8.5z" />
+                      </svg>
+                      <span>{{ inWishlist ? 'Saved' : 'Save' }}</span>
+                    </button>
+                    <button class="btn-primary btn-grow">
+                      <span class="btn-text">Acquire This Piece</span>
+                      <span class="btn-glow"></span>
+                    </button>
+                  </div>
                   
                   <div class="inventory-status">
                     <span class="label">Availability</span>
@@ -63,6 +85,15 @@ import { StoreService } from '../../services/store.service';
             </div>
 
           </div>
+        </div>
+
+        <div id="product-reviews" class="reviews-anchor-target" *ngIf="product">
+          <app-product-reviews
+            [productId]="product.id"
+            [averageRating]="product.average_rating ?? null"
+            [reviewCount]="product.review_count ?? 0"
+            (statsChanged)="onReviewsStatsChanged()"
+          />
         </div>
       </div>
     </div>
@@ -269,7 +300,106 @@ import { StoreService } from '../../services/store.service';
       font-size: 1.05rem;
       line-height: 1.7;
       color: #475569;
-      margin-bottom: 2.5rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .reviews-jump {
+      display: inline-flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.5rem 0.75rem;
+      margin: 0 0 1.75rem;
+      padding: 0.7rem 1.15rem;
+      border-radius: 999px;
+      border: 1px solid rgba(99, 102, 241, 0.4);
+      background: rgba(99, 102, 241, 0.1);
+      color: var(--primary);
+      font-weight: 800;
+      font-size: 0.88rem;
+      cursor: pointer;
+      font-family: inherit;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .reviews-jump:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 28px rgba(99, 102, 241, 0.2);
+    }
+
+    .reviews-jump-stars {
+      letter-spacing: -0.08em;
+      color: #f59e0b;
+      font-size: 0.85rem;
+    }
+
+    .reviews-jump-badge {
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--dark);
+      opacity: 0.85;
+    }
+
+    .reviews-jump-badge.muted {
+      color: #64748b;
+    }
+
+    .reviews-anchor-target {
+      scroll-margin-top: 6.5rem;
+    }
+
+    .action-row {
+      display: flex;
+      align-items: stretch;
+      gap: 0.85rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .btn-grow {
+      flex: 1;
+    }
+
+    .btn-wishlist {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      padding: 0 1.15rem;
+      min-width: 7.5rem;
+      background: rgba(255, 255, 255, 0.95);
+      border: 2px solid rgba(236, 72, 153, 0.45);
+      border-radius: 18px;
+      font-weight: 800;
+      font-size: 0.9rem;
+      color: #be185d;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .btn-wishlist .heart-svg {
+      width: 20px;
+      height: 20px;
+    }
+
+    .btn-wishlist .heart-svg path {
+      fill: transparent;
+      stroke: #ec4899;
+      stroke-width: 1.5;
+    }
+
+    .btn-wishlist.filled {
+      background: rgba(236, 72, 153, 0.15);
+      border-color: #ec4899;
+    }
+
+    .btn-wishlist.filled .heart-svg path {
+      fill: #ec4899;
+      stroke: #be185d;
+      stroke-width: 0.5;
+    }
+
+    .btn-wishlist:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 28px rgba(236, 72, 153, 0.2);
     }
 
     .btn-primary {
@@ -317,13 +447,19 @@ import { StoreService } from '../../services/store.service';
     }
   `]
 })
-export class ProductDetailsComponent implements OnInit {
+export class ProductDetailsComponent implements OnInit, OnDestroy {
   product?: ProductDetails;
   selectedImage = '';
+  inWishlist = false;
+
+  private subs = new Subscription();
 
   constructor(
     private readonly route: ActivatedRoute,
-    private readonly store: StoreService
+    private readonly store: StoreService,
+    private readonly wishlist: WishlistService,
+    private readonly auth: AuthService,
+    private readonly router: Router
   ) {}
 
   ngOnInit(): void {
@@ -338,8 +474,65 @@ export class ProductDetailsComponent implements OnInit {
         } else {
           this.selectedImage = 'https://placehold.co/600x800?text=No+Image';
         }
+        this.syncWishlistState();
       },
-      error: (err) => console.error('Error fetching product details:', err)
+      error: (err) => console.error('Error fetching product details:', err),
     });
+
+    this.subs.add(
+      this.auth.authState$.subscribe((s) => {
+        if (s.isLoggedIn) {
+          this.wishlist.load().subscribe();
+        } else {
+          this.inWishlist = false;
+        }
+      })
+    );
+    this.subs.add(
+      this.wishlist.items$.subscribe(() => {
+        this.syncWishlistState();
+      })
+    );
+  }
+
+  ngOnDestroy(): void {
+    this.subs.unsubscribe();
+  }
+
+  toggleWishlist(event: Event): void {
+    event.preventDefault();
+    if (!this.product) {
+      return;
+    }
+    if (!localStorage.getItem('access_token')) {
+      void this.router.navigate(['/login']);
+      return;
+    }
+    this.wishlist.toggle(this.product.id).subscribe();
+  }
+
+  private syncWishlistState(): void {
+    if (!this.product) {
+      return;
+    }
+    this.inWishlist = this.wishlist.isInWishlist(this.product.id);
+  }
+
+  onReviewsStatsChanged(): void {
+    if (!this.product) {
+      return;
+    }
+    const id = this.product.id;
+    this.store.getProductDetails(id).subscribe({
+      next: (res) => {
+        this.product = res;
+        this.syncWishlistState();
+      },
+      error: (err) => console.error('Error refreshing product:', err),
+    });
+  }
+
+  scrollToReviews(): void {
+    document.getElementById('product-reviews')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 }
