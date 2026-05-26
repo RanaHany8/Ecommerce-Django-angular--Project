@@ -6,21 +6,28 @@ import { LoginComponent } from './pages/login/login.component';
 import { RegisterComponent } from './pages/register/register.component';
 import { ProfileComponent } from './pages/profile/profile.component';
 
+
+import { Dashboard } from './pages/admin/dashboard/dashboard';
+import { UsersComponent } from './pages/admin/users/users';
+import { Products } from './pages/admin/products/products';
+
 export const routes: Routes = [
   { path: '', component: HomeComponent },
   { path: 'products/:id', component: ProductDetailsComponent },
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
   { path: 'profile', component: ProfileComponent },
-  { path: 'activate/:uid/:token',component: ActivateComponent},
+  { path: 'activate/:uid/:token', component: ActivateComponent },
 
-  { 
-    path: 'admin', 
+ 
+  {
+    path: 'admin',
     children: [
-      { path: 'dashboard', component: AdminDashboardComponent },
+      { path: 'dashboard', component: Dashboard },
       { path: 'users', component: UsersComponent },
-      { path: 'products', component: AdminProductsComponent },
+      { path: 'products', component: Products }
     ]
   },
+
   { path: '**', redirectTo: '' },
 ];
