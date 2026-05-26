@@ -31,4 +31,12 @@ export class UsersComponent implements OnInit {
       }
     });
   }
+
+  toggleStatus(userId: number): void {
+    this.adminService.toggleUserStatus(userId).subscribe({
+      next: () => {
+        this.loadUsers();
+      }
+    });
+  }
 }
