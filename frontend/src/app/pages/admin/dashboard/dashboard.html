@@ -1,12 +1,35 @@
-<div class="min-height-screen p-6 animate-reveal">
+<div class="min-h-screen p-6 animate-reveal">
   <h1 class="text-4xl font-display font-bold text-slate-800 mb-8">
     System <span class="text-indigo-600">Overview</span>
   </h1>
 
-  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+  <div *ngIf="loading" class="text-center py-10">
+    <div class="animate-pulse text-indigo-600 font-semibold">Fetching system insights...</div>
+  </div>
+
+  <div *ngIf="error" class="bg-red-50 text-red-600 p-4 rounded-xl mb-6">
+    {{ error }}
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6" *ngIf="stats">
     <div class="glass-card p-6 rounded-3xl bg-white/40 backdrop-blur-xl border border-white/20 shadow-luxury">
       <p class="text-slate-500 text-xs font-bold uppercase tracking-wider">Total Revenue</p>
-      <h2 class="text-3xl font-outfit font-black text-slate-800 mt-2">$24,500</h2>
+      <h2 class="text-3xl font-outfit font-black text-slate-800 mt-2">{{ stats.overview.total_revenue | currency }}</h2>
     </div>
+
+    <div class="glass-card p-6 rounded-3xl bg-white/40 backdrop-blur-xl border border-white/20 shadow-luxury">
+      <p class="text-slate-500 text-xs font-bold uppercase tracking-wider">Active Products</p>
+      <h2 class="text-3xl font-outfit font-black text-slate-800 mt-2">{{ stats.overview.products_count }}</h2>
     </div>
+
+    <div class="glass-card p-6 rounded-3xl bg-white/40 backdrop-blur-xl border border-white/20 shadow-luxury">
+      <p class="text-slate-500 text-xs font-bold uppercase tracking-wider">Registered Users</p>
+      <h2 class="text-3xl font-outfit font-black text-slate-800 mt-2">{{ stats.overview.users_count }}</h2>
+    </div>
+
+    <div class="glass-card p-6 rounded-3xl bg-white/40 backdrop-blur-xl border border-white/20 shadow-luxury">
+      <p class="text-slate-500 text-xs font-bold uppercase tracking-wider">Total Orders</p>
+      <h2 class="text-3xl font-outfit font-black text-slate-800 mt-2">{{ stats.overview.total_orders }}</h2>
+    </div>
+  </div>
 </div>
