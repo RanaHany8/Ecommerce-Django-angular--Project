@@ -111,6 +111,13 @@ class BecomeSellerView(generics.CreateAPIView):
         serializer = SellerSerializer(seller)
 
         return Response(serializer.data)
+    
+class SellerProfileView(generics.RetrieveUpdateAPIView):
+    serializer_class = SellerSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_object(self):
+        return self.request.user.seller
 
 @api_view(['GET'])
 def activate_account(request, uidb64, token):
