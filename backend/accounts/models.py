@@ -13,7 +13,24 @@ class Profile(models.Model):
     def __str__(self):
         return self.user.username
     
+class Seller(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+
+    store_name = models.CharField(max_length=100)
+
+    phone = models.CharField(max_length=20)
+
+    address = models.TextField()
+
+    is_approved = models.BooleanField(default=False)
+
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.store_name    
+    
 @receiver(post_save, sender=User)
 def create_profile(sender, instance, created, **kwargs):
     if created:
         Profile.objects.create(user=instance)
+
