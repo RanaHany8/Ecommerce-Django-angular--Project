@@ -5,13 +5,13 @@ from rest_framework.views import APIView
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.decorators import api_view
 
-from .serializers import ProfileSerializer, RegisterSerializer
+from .serializers import ProfileSerializer, RegisterSerializer,SellerSerializer,BecomeSellerSerializer
 from django.core.mail import EmailMultiAlternatives
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes
 from .tokens import account_activation_token
 from .emails import activation_email_html, activation_email_plain
-
+from .models import Seller
 User = get_user_model()
 
 
@@ -89,6 +89,29 @@ class ProfileView(generics.RetrieveUpdateAPIView):
         return self.request.user.profile
 
 
+class BecomeSellerView(generics.CreateAPIView):
+    serializer_class = BecomeSellerSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def create(self, request, *args, **kwargs):
+
+        if Seller.objects.filter(user=request.user).exists():
+            return Response(
+                {"message": "You are already a seller"},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        seller = Seller.objects.create(
+            user=request.user,
+            store_name=request.data.get('store_name'),
+            phone=request.data.get('phone'),
+            address=request.data.get('address')
+        )
+
+        serializer = SellerSerializer(seller)
+
+        return Response(serializer.data)
+
 @api_view(['GET'])
 def activate_account(request, uidb64, token):
     try:
@@ -103,3 +126,5 @@ def activate_account(request, uidb64, token):
         return Response({"message": "Account activated"}, status=200)
 
     return Response({"error": "Invalid or expired token"}, status=400)
+
+

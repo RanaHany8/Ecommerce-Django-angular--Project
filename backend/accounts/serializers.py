@@ -2,7 +2,7 @@ from django.contrib.auth.models import User
 from rest_framework import serializers
 from rest_framework.validators import UniqueValidator
 
-from .models import Profile
+from .models import Profile, Seller
 
 
 class RegisterSerializer(serializers.ModelSerializer):
@@ -85,3 +85,25 @@ class ProfileSerializer(serializers.ModelSerializer):
         instance.save()
 
         return instance
+    
+class SellerSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Seller
+        fields = [
+            'id',
+            'store_name',
+            'phone',
+            'address',
+            'is_approved'
+        ]    
+
+class BecomeSellerSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Seller
+        fields = [
+            'store_name',
+            'phone',
+            'address'
+        ]        
