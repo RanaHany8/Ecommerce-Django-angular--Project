@@ -21,4 +21,9 @@ export class AdminService {
   toggleUserStatus(userId: number): Observable<any> {
     return this.http.patch(`${this.dashboardUrl}users/${userId}/`, {});
   }
+
+ 
+  createPromoCode(promoData: { code: string; discount: number }): Observable<any> {
+    return this.http.post(`${this.dashboardUrl}promo-codes/`, promoData);
+  }
 }
