@@ -5,13 +5,22 @@ from rest_framework.views import APIView
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.decorators import api_view
 
-from .serializers import ProfileSerializer, RegisterSerializer,SellerSerializer,BecomeSellerSerializer
+from .serializers import (
+    ProfileSerializer,
+    RegisterSerializer,
+    SellerSerializer,
+    BecomeSellerSerializer,
+    SellerDashboardSerializer,
+)
 from django.core.mail import EmailMultiAlternatives
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes
 from .tokens import account_activation_token
 from .emails import activation_email_html, activation_email_plain
 from .models import Seller
+from catalog.models import Product
+from .serializers import SellerDashboardSerializer
+
 User = get_user_model()
 
 
@@ -60,9 +69,7 @@ class LoginView(APIView):
             return Response({"detail": "User not found."}, status=404)
 
         authenticated_user = authenticate(
-            request,
-            username=user.username,
-            password=password
+            request, username=user.username, password=password
         )
 
         if not authenticated_user:
@@ -70,15 +77,17 @@ class LoginView(APIView):
 
         refresh = RefreshToken.for_user(authenticated_user)
 
-        return Response({
-            "access": str(refresh.access_token),
-            "refresh": str(refresh),
-            "user": {
-                "id": authenticated_user.id,
-                "username": authenticated_user.username,
-                "email": authenticated_user.email,
-            },
-        })
+        return Response(
+            {
+                "access": str(refresh.access_token),
+                "refresh": str(refresh),
+                "user": {
+                    "id": authenticated_user.id,
+                    "username": authenticated_user.username,
+                    "email": authenticated_user.email,
+                },
+            }
+        )
 
 
 class ProfileView(generics.RetrieveUpdateAPIView):
@@ -98,20 +107,21 @@ class BecomeSellerView(generics.CreateAPIView):
         if Seller.objects.filter(user=request.user).exists():
             return Response(
                 {"message": "You are already a seller"},
-                status=status.HTTP_400_BAD_REQUEST
+                status=status.HTTP_400_BAD_REQUEST,
             )
 
         seller = Seller.objects.create(
             user=request.user,
-            store_name=request.data.get('store_name'),
-            phone=request.data.get('phone'),
-            address=request.data.get('address')
+            store_name=request.data.get("store_name"),
+            phone=request.data.get("phone"),
+            address=request.data.get("address"),
         )
 
         serializer = SellerSerializer(seller)
 
         return Response(serializer.data)
-    
+
+
 class SellerProfileView(generics.RetrieveUpdateAPIView):
     serializer_class = SellerSerializer
     permission_classes = [permissions.IsAuthenticated]
@@ -119,7 +129,8 @@ class SellerProfileView(generics.RetrieveUpdateAPIView):
     def get_object(self):
         return self.request.user.seller
 
-@api_view(['GET'])
+
+@api_view(["GET"])
 def activate_account(request, uidb64, token):
     try:
         uid = urlsafe_base64_decode(uidb64).decode()
@@ -135,3 +146,45 @@ def activate_account(request, uidb64, token):
     return Response({"error": "Invalid or expired token"}, status=400)
 
 
+class SellerDashboardView(APIView):
+
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request):
+
+        seller = request.user.seller
+
+        products = Product.objects.filter(seller=seller)
+
+        data = {
+            "store_name": seller.store_name,
+            "products_count": products.count(),
+            "total_stock": sum(product.stock for product in products),
+            "out_of_stock_products": products.filter(stock=0).count(),
+        }
+
+        serializer = SellerDashboardSerializer(data)
+
+        return Response(serializer.data)
+
+
+class SellerDashboardView(APIView):
+
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request):
+
+        seller = request.user.seller
+
+        products = Product.objects.filter(seller=seller)
+
+        data = {
+            "store_name": seller.store_name,
+            "products_count": products.count(),
+            "total_stock": sum(product.stock for product in products),
+            "out_of_stock_products": products.filter(stock=0).count(),
+        }
+
+        serializer = SellerDashboardSerializer(data)
+
+        return Response(serializer.data)
