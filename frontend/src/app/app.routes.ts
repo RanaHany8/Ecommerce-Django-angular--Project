@@ -11,7 +11,8 @@ import { WishlistComponent } from './pages/wishlist/wishlist.component';
 import { Dashboard } from './pages/admin/dashboard/dashboard';
 import { UsersComponent } from './pages/admin/users/users';
 import { Products } from './pages/admin/products/products';
-
+import { adminGuard } from './guards/admin.guard';
+import { PromoCodes } from './pages/admin/promo-codes/promo-codes.page';
 export const routes: Routes = [
   { path: '', component: HomeComponent },
   { path: 'products/:id', component: ProductDetailsComponent },
@@ -22,14 +23,16 @@ export const routes: Routes = [
   { path: 'activate/:uid/:token', component: ActivateComponent },
 
  
-  {
-    path: 'admin',
-    children: [
-      { path: 'dashboard', component: Dashboard },
-      { path: 'users', component: UsersComponent },
-      { path: 'products', component: Products }
-    ]
-  },
+ {
+  path: 'admin',
+  canActivate: [adminGuard],
+  children: [
+    { path: 'dashboard', component: Dashboard },
+    { path: 'users', component: UsersComponent },
+    { path: 'products', component: Products },
+    { path: 'promo-codes', component: PromoCodes }
+  ]
+},
 
   { path: '**', redirectTo: '' },
 ];
