@@ -4,7 +4,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.decorators import api_view
-from .models import Wallet
+from .models import Wallet, Payment
 from .serializers import WalletSerializer
 from .serializers import (
     ProfileSerializer,
@@ -13,6 +13,7 @@ from .serializers import (
     BecomeSellerSerializer,
     SellerDashboardSerializer,
     SellerEarningsSerializer,
+    PaymentSerializer,
 )
 from django.core.mail import EmailMultiAlternatives
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
@@ -233,5 +234,30 @@ class PayoutListCreateView(APIView):
         payout = Payout.objects.create(seller=seller, amount=request.data.get("amount"))
 
         serializer = PayoutSerializer(payout)
+
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+
+class PaymentListCreateView(APIView):
+
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request):
+
+        payments = request.user.seller.payments.all()
+
+        serializer = PaymentSerializer(payments, many=True)
+
+        return Response(serializer.data)
+
+    def post(self, request):
+
+        payment = Payment.objects.create(
+            seller=request.user.seller,
+            amount=request.data.get("amount"),
+            payment_method=request.data.get("payment_method", "cash_on_delivery"),
+        )
+
+        serializer = PaymentSerializer(payment)
 
         return Response(serializer.data, status=status.HTTP_201_CREATED)

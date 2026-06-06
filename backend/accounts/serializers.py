@@ -2,7 +2,7 @@ from django.contrib.auth.models import User
 from rest_framework import serializers
 from rest_framework.validators import UniqueValidator
 
-from .models import Profile, Seller, Wallet, Payout
+from .models import Payment, Profile, Seller, Wallet, Payout
 from catalog.models import Product
 
 
@@ -135,5 +135,16 @@ class PayoutSerializer(serializers.ModelSerializer):
             "id",
             "amount",
             "status",
+            "created_at",
+        ]
+class PaymentSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Payment
+        fields = [
+            "id",
+            "amount",
+            "status",
+            "payment_method",
             "created_at",
         ]
