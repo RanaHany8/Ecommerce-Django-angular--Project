@@ -2,7 +2,7 @@ from django.contrib.auth.models import User
 from rest_framework import serializers
 from rest_framework.validators import UniqueValidator
 
-from .models import Profile, Seller
+from .models import Profile, Seller, Wallet
 from catalog.models import Product
 
 
@@ -109,3 +109,13 @@ class SellerDashboardSerializer(serializers.Serializer):
     total_stock = serializers.IntegerField()
 
     out_of_stock_products = serializers.IntegerField()
+
+class WalletSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Wallet
+        fields = [
+            'id',
+            'balance',
+            'created_at'
+        ]

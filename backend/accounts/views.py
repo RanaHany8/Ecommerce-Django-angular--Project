@@ -4,7 +4,8 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.decorators import api_view
-
+from .models import Wallet
+from .serializers import WalletSerializer
 from .serializers import (
     ProfileSerializer,
     RegisterSerializer,
@@ -186,5 +187,20 @@ class SellerDashboardView(APIView):
         }
 
         serializer = SellerDashboardSerializer(data)
+
+        return Response(serializer.data)
+
+
+class WalletView(APIView):
+
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request):
+
+        seller = request.user.seller
+
+        wallet, created = Wallet.objects.get_or_create(seller=seller)
+
+        serializer = WalletSerializer(wallet)
 
         return Response(serializer.data)
