@@ -1,6 +1,6 @@
 from django.db import models
 from cloudinary.models import CloudinaryField
-
+from accounts.models import Seller
 
 class Category(models.Model):
     name = models.CharField(max_length=100, unique=True)
@@ -15,6 +15,13 @@ class Category(models.Model):
 
 
 class Product(models.Model):
+    seller = models.ForeignKey(
+    Seller,
+    on_delete=models.CASCADE,
+    related_name='products',
+    null=True,
+    blank=True
+    )
     category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='products')
     name = models.CharField(max_length=200)
     slug = models.SlugField(unique=True)
