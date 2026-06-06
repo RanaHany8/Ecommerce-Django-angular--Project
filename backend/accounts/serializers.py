@@ -2,7 +2,7 @@ from django.contrib.auth.models import User
 from rest_framework import serializers
 from rest_framework.validators import UniqueValidator
 
-from .models import Profile, Seller, Wallet
+from .models import Profile, Seller, Wallet, Payout
 from catalog.models import Product
 
 
@@ -125,3 +125,15 @@ class SellerEarningsSerializer(serializers.Serializer):
     wallet_balance = serializers.DecimalField(max_digits=12, decimal_places=2)
 
     products_count = serializers.IntegerField()
+
+
+class PayoutSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Payout
+        fields = [
+            "id",
+            "amount",
+            "status",
+            "created_at",
+        ]

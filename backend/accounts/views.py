@@ -12,16 +12,16 @@ from .serializers import (
     SellerSerializer,
     BecomeSellerSerializer,
     SellerDashboardSerializer,
-     SellerEarningsSerializer,
+    SellerEarningsSerializer,
 )
 from django.core.mail import EmailMultiAlternatives
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes
 from .tokens import account_activation_token
 from .emails import activation_email_html, activation_email_plain
-from .models import Seller
+from .models import Seller, Payout
 from catalog.models import Product
-from .serializers import SellerDashboardSerializer
+from .serializers import SellerDashboardSerializer, PayoutSerializer
 from decimal import Decimal
 
 User = get_user_model()
@@ -184,6 +184,8 @@ class WalletView(APIView):
         serializer = WalletSerializer(wallet)
 
         return Response(serializer.data)
+
+
 class SellerEarningsView(APIView):
 
     permission_classes = [permissions.IsAuthenticated]
@@ -210,3 +212,26 @@ class SellerEarningsView(APIView):
         serializer = SellerEarningsSerializer(data)
 
         return Response(serializer.data)
+
+
+class PayoutListCreateView(APIView):
+
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request):
+
+        payouts = request.user.seller.payouts.all()
+
+        serializer = PayoutSerializer(payouts, many=True)
+
+        return Response(serializer.data)
+
+    def post(self, request):
+
+        seller = request.user.seller
+
+        payout = Payout.objects.create(seller=seller, amount=request.data.get("amount"))
+
+        serializer = PayoutSerializer(payout)
+
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
