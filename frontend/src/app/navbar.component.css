@@ -75,6 +75,33 @@
   flex-shrink: 0;
 }
 
+.wishlist-nav {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 999px;
+  text-decoration: none;
+  font-size: 1.15rem;
+  color: #ec4899;
+  background: rgba(236, 72, 153, 0.12);
+  border: 1px solid rgba(236, 72, 153, 0.35);
+  font-weight: 700;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.wishlist-nav:hover {
+  background: rgba(236, 72, 153, 0.22);
+  transform: scale(1.05);
+}
+
+.wishlist-nav.active {
+  background: rgba(99, 102, 241, 0.15);
+  border-color: rgba(99, 102, 241, 0.45);
+  color: #6366f1;
+}
+
 .icon-btn {
   border: none;
   background: transparent;

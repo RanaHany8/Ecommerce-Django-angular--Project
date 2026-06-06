@@ -1,0 +1,114 @@
+<section class="reviews-shell animate-reveal">
+  <div class="reviews-header">
+    <div>
+      <h3 class="reviews-title">Client Reviews</h3>
+      <p class="reviews-sub">Authentic feedback from the ShopSphere community</p>
+    </div>
+    <div class="summary-pill" *ngIf="reviewCount > 0; else noReviewsYet">
+      <div class="avg-stars" aria-hidden="true">
+        <span *ngFor="let s of stars" class="star" [class.full]="s <= roundedAverage">★</span>
+      </div>
+      <div class="avg-text">
+        <span class="avg-num">{{ (averageRating ?? 0) | number : '1.1-1' }}</span>
+        <span class="avg-of">/ 5</span>
+        <span class="avg-count">· {{ reviewCount }} review{{ reviewCount === 1 ? '' : 's' }}</span>
+      </div>
+    </div>
+    <ng-template #noReviewsYet>
+      <div class="summary-pill muted">
+        <span>No reviews yet — be the first to share your experience.</span>
+      </div>
+    </ng-template>
+  </div>
+
+  <div class="banner-error" *ngIf="error && !loading">
+    <span>{{ error }}</span>
+    <button type="button" class="link-retry" (click)="loadReviews()">Retry</button>
+  </div>
+
+  <div class="form-panel glass-panel" *ngIf="isLoggedIn">
+    <ng-container *ngIf="!hasMyReview || editingReview">
+      <h4 class="form-title">{{ editingReview ? 'Edit your review' : 'Write a review' }}</h4>
+      <p class="form-hint">Rate from 1 to 5 stars and optionally add a comment.</p>
+
+      <div class="star-input" role="group" aria-label="Star rating">
+        <button
+          *ngFor="let s of stars"
+          type="button"
+          class="star-btn"
+          [class.active]="s <= draftRating"
+          (click)="setDraftRating(s)"
+          [attr.aria-pressed]="s <= draftRating"
+        >
+          ★
+        </button>
+        <span class="star-label">{{ draftRating }} / 5</span>
+      </div>
+
+      <label class="field-label" for="review-comment">Comment</label>
+      <textarea
+        id="review-comment"
+        name="comment"
+        rows="4"
+        [(ngModel)]="draftComment"
+        placeholder="What did you love? What could be better?"
+        class="glass-textarea"
+      ></textarea>
+
+      <div class="form-error" *ngIf="formError">{{ formError }}</div>
+
+      <div class="form-actions">
+        <button type="button" class="btn-submit" (click)="submitForm()" [disabled]="formSubmitting">
+          {{ formSubmitting ? 'Saving…' : editingReview ? 'Update review' : 'Post review' }}
+        </button>
+        <button type="button" class="btn-ghost" *ngIf="editingReview" (click)="cancelForm()">Cancel</button>
+      </div>
+    </ng-container>
+
+    <div class="already-reviewed" *ngIf="hasMyReview && !editingReview">
+      <p>You’ve shared your thoughts on this piece.</p>
+      <div class="inline-actions">
+        <button type="button" class="btn-ghost" (click)="startEdit(myReview!)">Edit review</button>
+        <button type="button" class="btn-danger" (click)="deleteReview(myReview!)">Delete</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="guest-panel glass-panel" *ngIf="!isLoggedIn">
+    <p><a routerLink="/login" class="link-auth">Sign in</a> to leave a review.</p>
+  </div>
+
+  <div class="loading-block" *ngIf="loading">
+    <div class="skeleton-line" *ngFor="let _ of [1, 2, 3]"></div>
+  </div>
+
+  <div class="reviews-list" *ngIf="!loading && reviews.length && !error">
+    <article class="review-card glass-panel" *ngFor="let r of reviews; trackBy: trackByReviewId">
+      <div class="review-top">
+        <div class="review-user">
+          <span class="avatar">{{ r.username.charAt(0).toUpperCase() }}</span>
+          <div>
+            <div class="name">{{ r.username }}</div>
+            <time class="date" [attr.datetime]="r.created_at">{{ r.created_at | date : 'mediumDate' }}</time>
+          </div>
+        </div>
+        <div class="review-stars" aria-label="Rating {{ r.rating }} out of 5">
+          <span *ngFor="let s of stars" class="star" [class.full]="s <= r.rating">★</span>
+        </div>
+      </div>
+      <p class="review-comment" *ngIf="r.comment; else noComment">{{ r.comment }}</p>
+      <ng-template #noComment><p class="review-comment muted">No written comment.</p></ng-template>
+
+      <div class="review-owner-actions" *ngIf="isLoggedIn && r.username === currentUsername">
+        <button type="button" class="btn-text" (click)="startEdit(r)">Edit</button>
+        <button type="button" class="btn-text danger" (click)="deleteReview(r)">Delete</button>
+      </div>
+    </article>
+  </div>
+
+  <div class="empty-list glass-panel" *ngIf="!loading && !reviews.length && !error && !isLoggedIn">
+    <div class="empty-icon">★</div>
+    <h4>No reviews yet</h4>
+    <p>When shoppers weigh in, their stories will appear here.</p>
+  </div>
+</section>
