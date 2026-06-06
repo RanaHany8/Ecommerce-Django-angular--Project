@@ -15,6 +15,12 @@ export class AuthService {
   private baseUrl = 'http://127.0.0.1:8000/api/auth/';
   private authState = new BehaviorSubject<AuthState>({ isLoggedIn: false, username: '' });
   readonly authState$ = this.authState.asObservable();
+  get isAdmin(): boolean {
+  
+    const role = localStorage.getItem('user_role');
+    const username = localStorage.getItem('user_name');
+    return role === 'admin' || username === 'admin' || username === 'wessam'; 
+  }
 
   constructor(private http: HttpClient) {
     this.refreshAuthState();
