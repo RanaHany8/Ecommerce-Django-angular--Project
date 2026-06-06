@@ -12,6 +12,7 @@ from .serializers import (
     SellerSerializer,
     BecomeSellerSerializer,
     SellerDashboardSerializer,
+     SellerEarningsSerializer,
 )
 from django.core.mail import EmailMultiAlternatives
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
@@ -21,6 +22,7 @@ from .emails import activation_email_html, activation_email_plain
 from .models import Seller
 from catalog.models import Product
 from .serializers import SellerDashboardSerializer
+from decimal import Decimal
 
 User = get_user_model()
 
@@ -169,28 +171,6 @@ class SellerDashboardView(APIView):
         return Response(serializer.data)
 
 
-class SellerDashboardView(APIView):
-
-    permission_classes = [permissions.IsAuthenticated]
-
-    def get(self, request):
-
-        seller = request.user.seller
-
-        products = Product.objects.filter(seller=seller)
-
-        data = {
-            "store_name": seller.store_name,
-            "products_count": products.count(),
-            "total_stock": sum(product.stock for product in products),
-            "out_of_stock_products": products.filter(stock=0).count(),
-        }
-
-        serializer = SellerDashboardSerializer(data)
-
-        return Response(serializer.data)
-
-
 class WalletView(APIView):
 
     permission_classes = [permissions.IsAuthenticated]
@@ -202,5 +182,31 @@ class WalletView(APIView):
         wallet, created = Wallet.objects.get_or_create(seller=seller)
 
         serializer = WalletSerializer(wallet)
+
+        return Response(serializer.data)
+class SellerEarningsView(APIView):
+
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request):
+
+        seller = request.user.seller
+
+        products = seller.products.all()
+
+        total_earnings = Decimal("0.00")
+
+        for product in products:
+            total_earnings += product.price
+
+        wallet = seller.wallet
+
+        data = {
+            "total_earnings": total_earnings,
+            "wallet_balance": wallet.balance,
+            "products_count": products.count(),
+        }
+
+        serializer = SellerEarningsSerializer(data)
 
         return Response(serializer.data)

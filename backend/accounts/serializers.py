@@ -110,12 +110,18 @@ class SellerDashboardSerializer(serializers.Serializer):
 
     out_of_stock_products = serializers.IntegerField()
 
+
 class WalletSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Wallet
-        fields = [
-            'id',
-            'balance',
-            'created_at'
-        ]
+        fields = ["id", "balance", "created_at"]
+
+
+class SellerEarningsSerializer(serializers.Serializer):
+
+    total_earnings = serializers.DecimalField(max_digits=12, decimal_places=2)
+
+    wallet_balance = serializers.DecimalField(max_digits=12, decimal_places=2)
+
+    products_count = serializers.IntegerField()

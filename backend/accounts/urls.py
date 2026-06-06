@@ -7,8 +7,8 @@ from .views import (
     activate_account,
     SellerDashboardView,
     SellerProfileView,
-    SellerDashboardView,
     WalletView,
+    SellerEarningsView,
 )
 
 urlpatterns = [
@@ -19,5 +19,6 @@ urlpatterns = [
     path("seller-profile/", SellerProfileView.as_view()),
     path("seller-dashboard/", SellerDashboardView.as_view()),
     path("wallet/", WalletView.as_view()),
+    path("earnings/", SellerEarningsView.as_view()),
     path("activate/<uidb64>/<token>/", activate_account),
 ]
