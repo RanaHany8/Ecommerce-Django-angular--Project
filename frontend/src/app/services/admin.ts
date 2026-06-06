@@ -26,4 +26,8 @@ export class AdminService {
   createPromoCode(promoData: { code: string; discount: number }): Observable<any> {
     return this.http.post(`${this.dashboardUrl}promo-codes/`, promoData);
   }
+
+  getProducts(): Observable<any[]> {
+  return this.http.get<any[]>(`${environment.apiUrl}/catalog/products/`); // أو حسب مسار برودكتس التيم
+}
 }
