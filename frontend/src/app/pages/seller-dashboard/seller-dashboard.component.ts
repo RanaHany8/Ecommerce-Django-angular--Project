@@ -3,7 +3,8 @@ import { CommonModule } from '@angular/common';
 
 import { SellerDashboardService } from '../../services/seller-dashboard.service';
 import { SellerDashboard } from '../../models/seller-dashboard.model';
-
+import { EarningsService } from '../../services/earnings.service';
+import { Earnings } from '../../models/earnings.model';
 @Component({
   selector: 'app-seller-dashboard',
   standalone: true,
@@ -13,8 +14,12 @@ import { SellerDashboard } from '../../models/seller-dashboard.model';
 })
 export class SellerDashboardComponent implements OnInit {
   dashboard?: SellerDashboard;
+  earnings?: Earnings;
 
-  constructor(private sellerDashboardService: SellerDashboardService) {}
+  constructor(
+    private sellerDashboardService: SellerDashboardService,
+    private earningsService: EarningsService,
+  ) {}
 
   ngOnInit(): void {
     this.sellerDashboardService.getDashboard().subscribe({
@@ -27,6 +32,14 @@ export class SellerDashboardComponent implements OnInit {
         console.log('ERROR STATUS:', error.status);
         console.log('ERROR RESPONSE:', error.error);
         console.log('FULL ERROR:', error);
+      },
+    });
+    this.earningsService.getEarnings().subscribe({
+      next: (data) => {
+        this.earnings = data;
+      },
+      error: (error) => {
+        console.error(error);
       },
     });
   }

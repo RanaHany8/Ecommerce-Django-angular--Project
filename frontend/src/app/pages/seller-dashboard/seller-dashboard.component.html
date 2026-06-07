@@ -1,15 +1,10 @@
 <div class="dashboard-wrapper" *ngIf="dashboard">
-
   <div class="dashboard-card">
+    <h2>Seller Dashboard</h2>
 
-    <h2>Seller Dashboard </h2>
-
-    <p class="subtitle">
-      Welcome back, {{ dashboard.store_name }}
-    </p>
+    <p class="subtitle">Welcome back, {{ dashboard.store_name }}</p>
 
     <div class="stats-grid">
-
       <div class="stat-card">
         <h3>Products</h3>
         <p class="stat-number">
@@ -30,9 +25,11 @@
           {{ dashboard.out_of_stock_products }}
         </p>
       </div>
+      <div class="stat-card" *ngIf="earnings">
+        <h3>Total Earnings</h3>
 
+        <p class="stat-number">{{ earnings.total_earnings }} EGP</p>
+      </div>
     </div>
-
   </div>
-
 </div>
