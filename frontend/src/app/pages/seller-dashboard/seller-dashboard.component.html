@@ -1,0 +1,38 @@
+<div class="dashboard-wrapper" *ngIf="dashboard">
+
+  <div class="dashboard-card">
+
+    <h2>Seller Dashboard </h2>
+
+    <p class="subtitle">
+      Welcome back, {{ dashboard.store_name }}
+    </p>
+
+    <div class="stats-grid">
+
+      <div class="stat-card">
+        <h3>Products</h3>
+        <p class="stat-number">
+          {{ dashboard.products_count }}
+        </p>
+      </div>
+
+      <div class="stat-card">
+        <h3>Total Stock</h3>
+        <p class="stat-number">
+          {{ dashboard.total_stock }}
+        </p>
+      </div>
+
+      <div class="stat-card">
+        <h3>Out Of Stock</h3>
+        <p class="stat-number danger">
+          {{ dashboard.out_of_stock_products }}
+        </p>
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
