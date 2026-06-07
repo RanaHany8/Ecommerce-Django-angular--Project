@@ -5,6 +5,8 @@ import { SellerDashboardService } from '../../services/seller-dashboard.service'
 import { SellerDashboard } from '../../models/seller-dashboard.model';
 import { EarningsService } from '../../services/earnings.service';
 import { Earnings } from '../../models/earnings.model';
+import { Wallet } from '../../models/wallet.model';
+import { WalletService } from '../../services/wallet.service';
 @Component({
   selector: 'app-seller-dashboard',
   standalone: true,
@@ -15,10 +17,12 @@ import { Earnings } from '../../models/earnings.model';
 export class SellerDashboardComponent implements OnInit {
   dashboard?: SellerDashboard;
   earnings?: Earnings;
+  wallet?: Wallet;
 
   constructor(
     private sellerDashboardService: SellerDashboardService,
     private earningsService: EarningsService,
+    private walletService: WalletService,
   ) {}
 
   ngOnInit(): void {
@@ -32,6 +36,14 @@ export class SellerDashboardComponent implements OnInit {
         console.log('ERROR STATUS:', error.status);
         console.log('ERROR RESPONSE:', error.error);
         console.log('FULL ERROR:', error);
+      },
+    });
+    this.walletService.getWallet().subscribe({
+      next: (data) => {
+        this.wallet = data;
+      },
+      error: (error) => {
+        console.error(error);
       },
     });
     this.earningsService.getEarnings().subscribe({

@@ -30,6 +30,11 @@
 
         <p class="stat-number">{{ earnings.total_earnings }} EGP</p>
       </div>
+      <div class="stat-card" *ngIf="wallet">
+        <h3>Wallet Balance</h3>
+
+        <p class="stat-number">{{ wallet.balance }} EGP</p>
+      </div>
     </div>
   </div>
 </div>
