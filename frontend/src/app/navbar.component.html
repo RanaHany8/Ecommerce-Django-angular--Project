@@ -6,7 +6,9 @@
     </a>
 
     <div class="nav-links">
-      <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Curated Catalog</a>
+      <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"
+        >Curated Catalog</a
+      >
       <a routerLink="/collections" routerLinkActive="active">Exclusives</a>
       <a routerLink="/trends" routerLinkActive="active">2026 Trends</a>
     </div>
@@ -19,7 +21,13 @@
       </div>
 
       <ng-container *ngIf="isLoggedIn; else guestLinks">
-        <a routerLink="/wishlist" class="wishlist-nav" routerLinkActive="active" aria-label="Wishlist">♡</a>
+        <a
+          routerLink="/wishlist"
+          class="wishlist-nav"
+          routerLinkActive="active"
+          aria-label="Wishlist"
+          >♡</a
+        >
         <button class="user-pill" type="button" (click)="toggleDropdown()">
           <span class="user-avatar">{{ avatarInitial }}</span>
           <span class="user-name">{{ currentUserName }}</span>
@@ -28,6 +36,9 @@
 
         <div *ngIf="menuOpen" class="dropdown-menu">
           <a routerLink="/profile" (click)="menuOpen = false">Profile</a>
+
+          <a routerLink="/seller-dashboard" (click)="menuOpen = false"> Seller Dashboard </a>
+
           <button type="button" (click)="logout()">Logout</button>
         </div>
       </ng-container>
