@@ -7,6 +7,8 @@ import { EarningsService } from '../../services/earnings.service';
 import { Earnings } from '../../models/earnings.model';
 import { Wallet } from '../../models/wallet.model';
 import { WalletService } from '../../services/wallet.service';
+import { Payout } from '../../models/payout.model';
+import { PayoutService } from '../../services/payout.service';
 @Component({
   selector: 'app-seller-dashboard',
   standalone: true,
@@ -18,11 +20,13 @@ export class SellerDashboardComponent implements OnInit {
   dashboard?: SellerDashboard;
   earnings?: Earnings;
   wallet?: Wallet;
+  payouts: Payout[] = [];
 
   constructor(
     private sellerDashboardService: SellerDashboardService,
     private earningsService: EarningsService,
     private walletService: WalletService,
+    private payoutService: PayoutService,
   ) {}
 
   ngOnInit(): void {
@@ -52,6 +56,11 @@ export class SellerDashboardComponent implements OnInit {
       },
       error: (error) => {
         console.error(error);
+      },
+    });
+    this.payoutService.getPayouts().subscribe({
+      next: (data) => {
+        this.payouts = data;
       },
     });
   }
