@@ -1,1 +1,61 @@
-<p>seller-payouts works!</p>
+<div class="payout-wrapper">
+
+  <div class="payout-card">
+
+    <h2>Payout Requests </h2>
+
+    <p class="subtitle">
+      Track and manage your withdrawal requests
+    </p>
+
+    <div *ngIf="payouts.length; else emptyState"
+         class="payout-grid">
+
+      <div
+        class="request-card"
+        *ngFor="let payout of payouts">
+
+        <div class="amount">
+          {{ payout.amount }} EGP
+        </div>
+
+        <div class="info-row">
+          <span class="label">Method</span>
+          <span class="value">
+            {{ payout.payment_method || 'Not Specified' }}
+          </span>
+        </div>
+
+        <div class="info-row">
+          <span class="label">Status</span>
+
+          <span
+            class="status"
+            [class.pending]="payout.status === 'pending'">
+
+            {{ payout.status }}
+
+          </span>
+        </div>
+
+      </div>
+
+    </div>
+
+    <ng-template #emptyState>
+
+      <div class="empty-state">
+
+        <h3>No payout requests yet</h3>
+
+        <p>
+          Your withdrawal requests will appear here.
+        </p>
+
+      </div>
+
+    </ng-template>
+
+  </div>
+
+</div>
