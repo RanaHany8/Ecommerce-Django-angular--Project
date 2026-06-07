@@ -272,7 +272,7 @@ import { WishlistService } from '../../services/wishlist.service';
 
       /* 2. Hero Section */
       .hero-section {
-        padding: 6rem 0 4rem; /* زيادة المسافة من فوق عشان الـ Header العام */
+        padding: 6rem 0 4rem; 
         text-align: center;
       }
 
