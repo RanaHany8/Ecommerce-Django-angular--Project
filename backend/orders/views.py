@@ -9,13 +9,11 @@ class OrderViewSet(viewsets.ModelViewSet):
     serializer_class = OrderSerializer
 
     def get_queryset(self):
-        """show only the orders of the currently authenticated user"""
         if not self.request.user.is_authenticated:
             return Order.objects.none()
         return Order.objects.filter(user=self.request.user).order_by('-created_at')
 
     def create(self, request):
-        """create a new order based on the current user's cart and the provided order details"""
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
 

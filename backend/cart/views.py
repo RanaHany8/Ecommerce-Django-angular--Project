@@ -9,7 +9,6 @@ class CartViewSet(viewsets.ModelViewSet):
     serializer_class = CartSerializer
 
     def get_queryset(self):
-        """Get the cart for the current user or guest"""
         if self.request.user.is_authenticated:
             cart, created = Cart.objects.get_or_create(user=self.request.user)
             return Cart.objects.filter(id=cart.id)
@@ -21,9 +20,10 @@ class CartViewSet(viewsets.ModelViewSet):
             cart, created = Cart.objects.get_or_create(session_id=session_id)
             return Cart.objects.filter(id=cart.id)
 
+    
     @action(detail=False, methods=['post'], url_path='add-item')
+    
     def add_item(self, request):
-        """"Add a product to the cart or update quantity if it already exists"""
         cart = self.get_queryset().first()
         product_id = request.data.get('product_id')
         quantity = int(request.data.get('quantity', 1))
@@ -47,9 +47,10 @@ class CartViewSet(viewsets.ModelViewSet):
         cart_item.save()
         return Response({"message": "Item added to cart successfully"}, status=status.HTTP_200_OK)
 
+    
     @action(detail=False, methods=['put'], url_path='update-quantity/(?P<item_id>[0-9]+)')
+
     def update_quantity(self, request, item_id=None):
-        """update the quantity of a specific item in the cart"""
         try:
             cart_item = CartItem.objects.get(id=item_id, cart=self.get_queryset().first())
         except CartItem.DoesNotExist:
@@ -66,7 +67,6 @@ class CartViewSet(viewsets.ModelViewSet):
 
     @action(detail=False, methods=['delete'], url_path='remove-item/(?P<item_id>[0-9]+)')
     def remove_item(self, request, item_id=None):
-        """Delete an item from the cart"""
         try:
             cart_item = CartItem.objects.get(id=item_id, cart=self.get_queryset().first())
             cart_item.delete()

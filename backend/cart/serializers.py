@@ -1,39 +1,28 @@
 from rest_framework import serializers
 from .models import Cart, CartItem  
-from catalog.models import Product
+from products.models import Product
 
 class ProductSimpleSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product
         fields = ['id', 'title', 'price', 'image', 'stock']
 
-
 class CartItemSerializer(serializers.ModelSerializer):
     product_title = serializers.CharField(source='product.title', read_only=True)
     product_price = serializers.DecimalField(source='product.price', max_digits=10, decimal_places=2, read_only=True)
-    subtotal = serializers.SerializerMethodField()
 
     class Meta:
         model = CartItem
-        fields = ['id', 'product', 'product_title', 'product_price', 'quantity', 'subtotal']
-
-    def get_subtotal(self, obj):
-        return obj.product.price * obj.quantity
-
+        fields = ['id', 'product', 'product_title', 'product_price', 'quantity']
 
 class CartSerializer(serializers.ModelSerializer):
     items = serializers.SerializerMethodField()
-    total_cart_price = serializers.SerializerMethodField()
 
     class Meta:
         model = Cart
-        fields = ['id', 'user', 'session_id', 'created_at', 'updated_at', 'items', 'total_cart_price']
+        fields = ['id', 'user', 'session_id', 'items'] 
         read_only_fields = ['user', 'session_id']
 
     def get_items(self, obj):
-        cart_items = obj.items.all()
+        cart_items = CartItem.objects.filter(cart=obj)
         return CartItemSerializer(cart_items, many=True).data
-
-    def get_total_cart_price(self, obj):
-
-        return sum(item.product.price * item.quantity for item in obj.items.all())
