@@ -1,0 +1,129 @@
+<section class="checkout-page">
+  <div class="ambient-glow glow-left"></div>
+  <div class="ambient-glow glow-right"></div>
+
+  <div class="checkout-shell">
+    <header class="checkout-header">
+      <div class="checkout-badge">Secure Step</div>
+      <h1>Secure Checkout</h1>
+      <p>Please enter your shipping details and apply any promo codes below.</p>
+    </header>
+
+    <div *ngIf="isLoading" class="glass-card state-card loading-state">
+      <p class="loading-text animate-pulse">Preparing your secure checkout...</p>
+    </div>
+
+    <div
+      *ngIf="!isLoading && (!cartData || cartData.items.length === 0)"
+      class="glass-card state-card empty-state"
+    >
+      <h2>No items to checkout</h2>
+      <p>Your cart is currently empty. Go back to add some amazing products!</p>
+      <a routerLink="/cart" class="primary-btn">Return to Cart</a>
+    </div>
+
+    <div *ngIf="!isLoading && cartData && cartData.items.length > 0" class="checkout-grid">
+      <div class="glass-card checkout-form-panel">
+        <div *ngIf="errorMessage" class="alert-message error-alert">
+          {{ errorMessage }}
+        </div>
+
+        <form (ngSubmit)="placeOrder()">
+          <fieldset class="form-section">
+            <legend>Shipping Information</legend>
+
+            <div class="form-grid two-cols">
+              <div class="form-group">
+                <label for="fullName">Full Name</label>
+                <input
+                  type="text"
+                  id="fullName"
+                  name="fullName"
+                  [(ngModel)]="shippingDetails.full_name"
+                  placeholder="Nancy Youssef"
+                  required
+                />
+              </div>
+
+              <div class="form-group">
+                <label for="phone">Phone Number</label>
+                <input
+                  type="tel"
+                  id="phone"
+                  name="phone"
+                  [(ngModel)]="shippingDetails.phone"
+                  placeholder="+20 123 456 7890"
+                  required
+                />
+              </div>
+            </div>
+
+            <div class="form-grid single-col">
+              <div class="form-group">
+                <label for="email">Email Address</label>
+                <input
+                  type="email"
+                  id="email"
+                  name="email"
+                  [(ngModel)]="shippingDetails.email"
+                  placeholder="nancy@example.com"
+                  required
+                />
+              </div>
+
+              <div class="form-group full-width">
+                <label for="address">Full Shipping Address</label>
+                <textarea
+                  id="address"
+                  name="address"
+                  [(ngModel)]="shippingDetails.address"
+                  rows="3"
+                  placeholder="Country, City, Street, Building..."
+                  required
+                ></textarea>
+              </div>
+            </div>
+          </fieldset>
+
+          <fieldset class="form-section coupon-section">
+            <legend>Have a Promo Code?</legend>
+            <div class="coupon-group">
+              <input
+                type="text"
+                id="couponCode"
+                name="couponCode"
+                [(ngModel)]="couponCode"
+                placeholder="Enter coupon code (e.g., SAVE20)"
+              />
+            </div>
+            <p class="coupon-hint">If you have a valid code, it will be applied with your order.</p>
+          </fieldset>
+        </form>
+      </div>
+
+      <aside class="glass-card summary-panel">
+        <h2>Order Summary</h2>
+        <p class="summary-caption">A quick look at what you are about to confirm.</p>
+
+        <div class="summary-items-preview">
+          <div *ngFor="let item of cartData.items" class="preview-row">
+            <span class="preview-title"
+              >{{ item.product_title }} <small>x{{ item.quantity }}</small></span
+            >
+            <span class="preview-price">{{ item.subtotal | currency }}</span>
+          </div>
+        </div>
+
+        <div class="summary-line">
+          <span>Total Order Price</span>
+          <strong>{{ cartData.total_cart_price | currency }}</strong>
+        </div>
+
+        <button type="button" (click)="placeOrder()" class="pay-btn" [disabled]="isSubmitting">
+          <span *ngIf="!isSubmitting">Complete Order</span>
+          <span *ngIf="isSubmitting" class="animate-pulse">Processing Order...</span>
+        </button>
+      </aside>
+    </div>
+  </div>
+</section>
