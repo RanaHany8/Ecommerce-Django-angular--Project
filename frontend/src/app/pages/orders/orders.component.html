@@ -1,0 +1,79 @@
+<section class="orders-page">
+  <div class="ambient-glow glow-left"></div>
+  <div class="ambient-glow glow-right"></div>
+
+  <div class="orders-shell">
+    <header class="orders-header">
+      <div class="orders-badge">Order History</div>
+      <h1>Your Orders & Tracking</h1>
+      <p>Track your purchases, see delivery progress, and review every order in one place.</p>
+    </header>
+
+    <div *ngIf="isLoading" class="glass-card state-card loading-state">
+      <p class="loading-text animate-pulse">Fetching your orders history...</p>
+    </div>
+
+    <div *ngIf="!isLoading && orders.length === 0" class="glass-card state-card empty-state">
+      <h2>No orders found</h2>
+      <p>You haven't placed any orders yet. Start exploring our store!</p>
+      <a routerLink="/" class="primary-btn">Explore Products</a>
+    </div>
+
+    <div *ngIf="!isLoading && orders.length > 0" class="orders-list">
+      <article *ngFor="let order of orders" class="glass-card order-card">
+        <div class="order-card-header">
+          <div>
+            <p class="order-kicker">Order Reference</p>
+            <h3>#{{ order.id }}</h3>
+            <p class="order-date">Placed on {{ order.created_at | date:'mediumDate' }}</p>
+          </div>
+
+          <span class="status-badge" [ngClass]="getStatusClass(order.status)">
+            {{ order.status | titlecase }}
+          </span>
+        </div>
+
+        <div class="tracking-timeline">
+          <div class="timeline-track">
+            <div class="track-progress" [style.width]="order.status === 'delivered' ? '100%' : order.status === 'shipped' ? '68%' : '24%'"></div>
+          </div>
+          <div class="timeline-steps">
+            <div class="step-node active">
+              <span class="node-dot"></span>
+              <span class="node-label">Placed</span>
+            </div>
+            <div class="step-node" [ngClass]="{'active': order.status === 'shipped' || order.status === 'delivered'}">
+              <span class="node-dot"></span>
+              <span class="node-label">Shipped</span>
+            </div>
+            <div class="step-node" [ngClass]="{'active': order.status === 'delivered'}">
+              <span class="node-dot"></span>
+              <span class="node-label">Delivered</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="order-body">
+          <div class="order-items-summary">
+            <h4>Items In This Order</h4>
+            <div *ngFor="let item of order.items" class="order-item-row">
+              <span class="item-title">{{ item.product_title }} <small>x{{ item.quantity }}</small></span>
+              <span class="item-price">{{ item.subtotal | currency }}</span>
+            </div>
+          </div>
+
+          <div class="order-meta-panel">
+            <div class="meta-chip">
+              <span class="meta-label">Items</span>
+              <strong>{{ order.items?.length || 0 }}</strong>
+            </div>
+            <div class="meta-chip accent">
+              <span class="meta-label">Total Paid</span>
+              <strong>{{ order.total_price | currency }}</strong>
+            </div>
+          </div>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>

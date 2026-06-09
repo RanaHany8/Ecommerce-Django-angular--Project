@@ -17,6 +17,8 @@ import { SellerPayoutsComponent } from './pages/seller-payouts/seller-payouts.co
 
 import { CartComponent } from './pages/cart/cart.component';
 import { CheckoutComponent } from './pages/checkout/checkout.component';
+import { OrderService } from './services/order.service';
+import { OrdersComponent } from './pages/orders/orders.component';
 
 export const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -49,8 +51,8 @@ export const routes: Routes = [
   { path: 'seller-dashboard', component: SellerDashboardComponent },
   
   { path: 'cart', component: CartComponent },
-  {path: 'checkout',component: CheckoutComponent,},
-  
+  { path: 'checkout', component: CheckoutComponent },
+  { path: 'orders', component: OrdersComponent, providers: [OrderService] },
 
   { path: '**', redirectTo: '' },
 ];
