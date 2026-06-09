@@ -24,7 +24,6 @@ import { CheckoutComponent } from './pages/checkout/checkout.component';
 import { OrderService } from './services/order.service';
 import { OrdersComponent } from './pages/orders/orders.component';
 import { TrackingComponent } from './pages/tracking/tracking.component';
-
 import { SellerPaymentsComponent } from './pages/seller-payments/seller-payments.component';
 import { SellerEarningsComponent } from './pages/seller-earnings/seller-earnings.component';
 import { SellerProductsComponent } from './pages/seller-products/seller-products.component';
@@ -45,6 +44,7 @@ export const routes: Routes = [
 
   { path: 'activate/:uid/:token', component: ActivateComponent },
 
+  // Admin Routes
   {
     path: 'admin',
     canActivate: [adminGuard],
@@ -56,8 +56,7 @@ export const routes: Routes = [
     ],
   },
 
-  { path: 'seller-dashboard', component: SellerDashboardComponent },
-
+  // Customer Routes
   { path: 'cart', component: CartComponent },
   { path: 'checkout', component: CheckoutComponent },
   { path: 'orders', component: OrdersComponent, providers: [OrderService] },
@@ -84,6 +83,9 @@ export const routes: Routes = [
     component: EditProductComponent,
   },
 
+  { path: 'seller-dashboard', 
+    component: SellerDashboardComponent 
+  },
   { path: '**', redirectTo: '' },
 ];
 
