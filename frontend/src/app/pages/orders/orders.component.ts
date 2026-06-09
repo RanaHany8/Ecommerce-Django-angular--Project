@@ -20,19 +20,25 @@ export class OrdersComponent implements OnInit {
     this.loadOrders();
   }
 
-  loadOrders(): void {
-    this.isLoading = true;
-    this.orderService.getUserOrders().subscribe({
-      next: (data: any) => {
+ loadOrders(): void {
+  this.isLoading = true;
+  this.orderService.getUserOrders().subscribe({
+    next: (data: any) => {
+      if (data && data.results && Array.isArray(data.results)) {
+        this.orders = data.results;
+      } else if (Array.isArray(data)) {
         this.orders = data;
-        this.isLoading = false;
-      },
-      error: (err: any) => {
-        console.error('Error fetching orders:', err);
-        this.isLoading = false;
+      } else {
+        this.orders = []; 
       }
-    });
-  }
+      this.isLoading = false;
+    },
+    error: (err: any) => {
+      console.error('Error fetching orders:', err);
+      this.isLoading = false;
+    }
+  });
+}
 
   getStatusClass(status: string): string {
     switch (status?.toLowerCase()) {

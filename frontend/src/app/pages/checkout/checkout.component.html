@@ -24,8 +24,13 @@
 
     <div *ngIf="!isLoading && cartData && cartData.items?.length > 0" class="checkout-grid">
       <div class="glass-card checkout-form-panel">
+
         <div *ngIf="errorMessage" class="alert-message error-alert">
           {{ errorMessage }}
+        </div>
+
+        <div *ngIf="successMessage" class="alert-message success-alert">
+          {{ successMessage }}
         </div>
 
         <form id="checkoutForm" (ngSubmit)="placeOrder()">
@@ -87,6 +92,7 @@
 
           <fieldset class="form-section coupon-section">
             <legend>Have a Promo Code?</legend>
+
             <div class="coupon-group">
               <input
                 type="text"
@@ -96,21 +102,30 @@
                 placeholder="Enter coupon code (e.g., SAVE20)"
               />
             </div>
-            <p class="coupon-hint">If you have a valid code, it will be applied with your order.</p>
+
+            <p class="coupon-hint">
+              If you have a valid code, it will be applied with your order.
+            </p>
           </fieldset>
         </form>
       </div>
 
       <aside class="glass-card summary-panel">
         <h2>Order Summary</h2>
-        <p class="summary-caption">A quick look at what you are about to confirm.</p>
+        <p class="summary-caption">
+          A quick look at what you are about to confirm.
+        </p>
 
         <div class="summary-items-preview">
           <div *ngFor="let item of cartData.items" class="preview-row">
-            <span class="preview-title"
-              >{{ item.product_title }} <small>x{{ item.quantity }}</small></span
-            >
-            <span class="preview-price">{{ item.subtotal | currency }}</span>
+            <span class="preview-title">
+              {{ item.product_title }}
+              <small>x{{ item.quantity }}</small>
+            </span>
+
+            <span class="preview-price">
+              {{ item.subtotal | currency }}
+            </span>
           </div>
         </div>
 
@@ -119,9 +134,16 @@
           <strong>{{ cartData.total_cart_price | currency }}</strong>
         </div>
 
-        <button type="submit" form="checkoutForm" class="pay-btn" [disabled]="isSubmitting">
+        <button
+          type="submit"
+          form="checkoutForm"
+          class="pay-btn"
+          [disabled]="isSubmitting"
+        >
           <span *ngIf="!isSubmitting">Complete Order</span>
-          <span *ngIf="isSubmitting" class="animate-pulse">Processing Order...</span>
+          <span *ngIf="isSubmitting" class="animate-pulse">
+            Processing Order...
+          </span>
         </button>
       </aside>
     </div>

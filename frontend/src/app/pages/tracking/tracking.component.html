@@ -1,0 +1,31 @@
+<section class="tracking-page">
+  <div class="ambient-glow"></div>
+  
+  <div class="tracking-shell">
+    <header class="tracking-header">
+      <button routerLink="/orders" class="back-btn">← Back to Orders</button>
+      <h1>Track Your Order</h1>
+      <p>Order Reference: <strong>#{{ orderId }}</strong></p>
+    </header>
+
+    <div class="glass-card tracking-card">
+      <div class="status-indicator">
+        <div class="status-icon" [ngClass]="trackingData.status"></div>
+        <h2>{{ trackingData.status | titlecase }}</h2>
+      </div>
+
+      <div class="timeline">
+        <div class="line"></div>
+        <div class="step" [class.active]="true">Placed</div>
+        <div class="step" [class.active]="trackingData.progress >= 2">Shipped</div>
+        <div class="step" [class.active]="trackingData.progress >= 3">Out for Delivery</div>
+        <div class="step" [class.active]="trackingData.progress === 4">Delivered</div>
+      </div>
+      
+      <div class="tracking-info">
+        <p>Current Location: <strong>{{ trackingData.location }}</strong></p>
+        <p>Estimated Delivery: <strong>{{ trackingData.eta | date }}</strong></p>
+      </div>
+    </div>
+  </div>
+</section>

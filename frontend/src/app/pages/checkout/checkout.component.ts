@@ -17,7 +17,7 @@ export class CheckoutComponent implements OnInit {
   cartData: any = null;
   isLoading: boolean = true;
   isSubmitting: boolean = false;
-  
+
   shippingDetails = {
     full_name: '',
     email: '',
@@ -33,7 +33,7 @@ export class CheckoutComponent implements OnInit {
     private cartService: CartService,
     private orderService: OrderService,
     private router: Router
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     this.loadCartSummary();
@@ -49,6 +49,7 @@ export class CheckoutComponent implements OnInit {
         } else {
           this.cartData = data;
         }
+
         this.isLoading = false;
       },
       error: (err: any) => {
@@ -59,7 +60,12 @@ export class CheckoutComponent implements OnInit {
   }
 
   placeOrder(): void {
-    if (!this.shippingDetails.full_name || !this.shippingDetails.email || !this.shippingDetails.phone || !this.shippingDetails.address) {
+    if (
+      !this.shippingDetails.full_name ||
+      !this.shippingDetails.email ||
+      !this.shippingDetails.phone ||
+      !this.shippingDetails.address
+    ) {
       this.errorMessage = 'Please fill in all shipping fields.';
       return;
     }
@@ -67,20 +73,27 @@ export class CheckoutComponent implements OnInit {
     this.isSubmitting = true;
     this.errorMessage = '';
 
-    const payload = {
+    const payload: any = {
       ...this.shippingDetails,
-      coupon_code: this.couponCode
+      cart_id: this.cartData?.id
     };
+
+    if (this.couponCode.trim() !== '') {
+      payload.coupon_code = this.couponCode;
+    }
 
     this.orderService.createOrder(payload).subscribe({
       next: (res: any) => {
         this.isSubmitting = false;
+        this.successMessage = 'Order placed successfully!';
         alert('Order placed successfully!');
-        this.router.navigate(['/orders']); 
+        this.router.navigate(['/orders']);
       },
       error: (err: any) => {
         this.isSubmitting = false;
-        this.errorMessage = err.error?.error || 'Something went wrong while placing your order.';
+        this.errorMessage =
+          err.error?.error ||
+          'Something went wrong while placing your order.';
       }
     });
   }
