@@ -1,0 +1,51 @@
+.earnings-wrapper {
+  min-height: 100vh;
+  padding: 50px 20px;
+  background: radial-gradient(circle at top,#f8fafc,#e2e8f0);
+}
+
+.earnings-card {
+  max-width: 1000px;
+  margin: auto;
+  background: rgba(255,255,255,.75);
+  backdrop-filter: blur(15px);
+  border-radius: 25px;
+  padding: 35px;
+  box-shadow: 0 20px 40px rgba(0,0,0,.08);
+}
+
+.earnings-card h1 {
+  font-size: 48px;
+  color: #0f172a;
+  margin-bottom: 10px;
+}
+
+.subtitle {
+  color: #64748b;
+  margin-bottom: 30px;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3,1fr);
+  gap: 25px;
+}
+
+.stat-box {
+  background: white;
+  border-radius: 20px;
+  padding: 30px;
+  text-align: center;
+  box-shadow: 0 10px 25px rgba(0,0,0,.08);
+}
+
+.stat-box h3 {
+  color: #64748b;
+  margin-bottom: 15px;
+}
+
+.amount {
+  font-size: 36px;
+  font-weight: 800;
+  color: #6366f1;
+}

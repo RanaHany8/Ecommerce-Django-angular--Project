@@ -1,0 +1,41 @@
+<div class="earnings-wrapper">
+
+  <div class="earnings-card" *ngIf="earnings">
+
+    <h1>Earnings 💰</h1>
+
+    <p class="subtitle">
+      Overview of your seller revenue
+    </p>
+
+    <div class="stats-grid">
+
+      <div class="stat-box">
+        <h3>Total Earnings</h3>
+
+        <p class="amount">
+          {{ earnings.total_earnings }} EGP
+        </p>
+      </div>
+
+      <div class="stat-box">
+        <h3>Wallet Balance</h3>
+
+        <p class="amount">
+          {{ earnings.wallet_balance }} EGP
+        </p>
+      </div>
+
+      <div class="stat-box">
+        <h3>Products Count</h3>
+
+        <p class="amount">
+          {{ earnings.products_count }}
+        </p>
+      </div>
+
+    </div>
+
+  </div>
+
+</div>

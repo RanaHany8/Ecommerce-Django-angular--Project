@@ -6,7 +6,7 @@ import { LoginComponent } from './pages/login/login.component';
 import { RegisterComponent } from './pages/register/register.component';
 import { ProfileComponent } from './pages/profile/profile.component';
 import { WishlistComponent } from './pages/wishlist/wishlist.component';
-
+import { SellerWalletComponent } from './pages/seller-wallet/seller-wallet.component';
 import { Dashboard } from './pages/admin/dashboard/dashboard';
 import { UsersComponent } from './pages/admin/users/users';
 import { Products } from './pages/admin/products/products';
@@ -14,7 +14,10 @@ import { PromoCodes } from './pages/admin/promo-codes/promo-codes.page';
 import { adminGuard } from './guards/admin.guard';
 import { SellerDashboardComponent } from './pages/seller-dashboard/seller-dashboard.component';
 import { SellerPayoutsComponent } from './pages/seller-payouts/seller-payouts.component';
-
+import { SellerPaymentsComponent } from './pages/seller-payments/seller-payments.component';
+import { SellerEarningsComponent } from './pages/seller-earnings/seller-earnings.component';
+import { SellerProductsComponent } from './pages/seller-products/seller-products.component';
+import { EditProductComponent } from './pages/edit-product/edit-product.component';
 export const routes: Routes = [
   { path: '', component: HomeComponent },
   { path: 'products/:id', component: ProductDetailsComponent },
@@ -36,14 +39,39 @@ export const routes: Routes = [
       { path: 'users', component: UsersComponent },
       { path: 'products', component: Products },
       { path: 'promo-codes', component: PromoCodes },
-      {
-        path: 'seller-payouts',
-        component: SellerPayoutsComponent,
-      },
     ],
   },
 
-  { path: 'seller-dashboard', component: SellerDashboardComponent },
+  {
+    path: 'seller-dashboard',
+    component: SellerDashboardComponent,
+  },
+
+  {
+    path: 'seller-payouts',
+    component: SellerPayoutsComponent,
+  },
+
+  {
+    path: 'seller-payments',
+    component: SellerPaymentsComponent,
+  },
+  {
+    path: 'seller-wallet',
+    component: SellerWalletComponent,
+  },
+  {
+    path: 'seller-earnings',
+    component: SellerEarningsComponent,
+  },
+  {
+    path: 'seller-products',
+    component: SellerProductsComponent,
+  },
+  {
+    path: 'seller-products/edit/:id',
+    component: EditProductComponent,
+  },
 
   { path: '**', redirectTo: '' },
 ];

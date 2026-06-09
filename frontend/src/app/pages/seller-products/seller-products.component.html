@@ -1,0 +1,28 @@
+<div class="products-wrapper">
+  <div class="products-card">
+    <h1>My Products 📦</h1>
+
+    <p class="subtitle">Manage your inventory</p>
+
+    <div *ngIf="products.length" class="products-grid">
+      <div class="product-item" *ngFor="let product of products">
+        <h2>
+          {{ product.name }}
+        </h2>
+
+        <p>
+          {{ product.description }}
+        </p>
+
+        <div class="price">{{ product.price }} EGP</div>
+
+        <div class="stock">Stock: {{ product.stock }}</div>
+        <button class="edit-btn" [routerLink]="['/seller-products/edit', product.id]">Edit</button
+        ><button class="edit-btn">Edit</button>
+        <button class="delete-btn" (click)="deleteProduct(product.id!)">Delete</button>
+      </div>
+    </div>
+
+    <div *ngIf="!products.length" class="empty-state">No products found</div>
+  </div>
+</div>

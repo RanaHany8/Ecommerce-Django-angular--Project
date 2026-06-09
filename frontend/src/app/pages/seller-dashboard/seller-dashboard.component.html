@@ -10,6 +10,7 @@
         <p class="stat-number">
           {{ dashboard.products_count }}
         </p>
+        <button class="dashboard-btn" routerLink="/seller-products">Manage Products</button>
       </div>
 
       <div class="stat-card">
@@ -25,15 +26,20 @@
           {{ dashboard.out_of_stock_products }}
         </p>
       </div>
+
       <div class="stat-card" *ngIf="earnings">
         <h3>Total Earnings</h3>
 
         <p class="stat-number">{{ earnings.total_earnings }} EGP</p>
+
+        <button class="dashboard-btn" routerLink="/seller-earnings">View Earnings</button>
       </div>
+
       <div class="stat-card" *ngIf="wallet">
         <h3>Wallet Balance</h3>
 
         <p class="stat-number">{{ wallet.balance }} EGP</p>
+        <button class="dashboard-btn" routerLink="/seller-wallet">View Wallet</button>
       </div>
       <div class="stat-card">
         <h3>Payout Requests</h3>
@@ -42,6 +48,13 @@
           {{ payouts.length }}
         </p>
         <button routerLink="/seller-payouts">View Requests</button>
+      </div>
+      <div class="stat-card">
+        <h3>Payments</h3>
+
+        <p class="stat-number">View</p>
+
+        <button class="dashboard-btn" routerLink="/seller-payments">View Payments</button>
       </div>
     </div>
   </div>
