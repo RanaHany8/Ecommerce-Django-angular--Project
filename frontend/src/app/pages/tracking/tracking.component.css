@@ -1,23 +1,150 @@
-.tracking-page { padding: 2rem; min-height: 100vh; background: #0f172a; color: white; }
-
-.glass-card {
-  background: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 20px;
+.tracking-page {
+  min-height: 100vh;
   padding: 2rem;
-  margin-top: 1rem;
+  background: radial-gradient(circle at top, #0f172a, #020617);
+  color: white;
+  font-family: system-ui;
 }
 
-.timeline { display: flex; justify-content: space-between; margin: 2rem 0; position: relative; }
+.tracking-shell {
+  max-width: 900px;
+  margin: auto;
+}
 
-.step { font-size: 0.9rem; color: #64748b; }
-.step.active { color: #38bdf8; font-weight: bold; }
+.tracking-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+}
+
+.header-content h1 {
+  margin: 0;
+  font-size: 1.8rem;
+}
+
+.header-content p {
+  margin: 0.3rem 0 0;
+  color: #94a3b8;
+}
+
+/* BUTTON */
+.back-btn {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid #334155;
+  color: white;
+  padding: 0.6rem 1rem;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.back-btn:hover {
+  background: rgba(56, 189, 248, 0.1);
+  border-color: #38bdf8;
+}
+
+/* GLASS CARD */
+.glass-card {
+  background: rgba(255,255,255,0.05);
+  backdrop-filter: blur(14px);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 24px;
+  padding: 2rem;
+}
+
+/* STATUS */
+.status-box {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
 
 .status-icon {
-  width: 50px; height: 50px; border-radius: 50%;
-  margin: 0 auto 1rem;
+  width: 55px;
+  height: 55px;
+  border-radius: 50%;
   background: linear-gradient(45deg, #38bdf8, #818cf8);
+  box-shadow: 0 0 20px rgba(56,189,248,0.4);
 }
 
-.back-btn { background: none; border: 1px solid #334155; color: white; padding: 0.5rem 1rem; border-radius: 8px; cursor: pointer; }
+.sub-text {
+  font-size: 0.85rem;
+  color: #94a3b8;
+}
+
+/* TIMELINE */
+.timeline {
+  margin: 2rem 0;
+}
+
+.progress-bar {
+  height: 6px;
+  background: #1e293b;
+  border-radius: 50px;
+  overflow: hidden;
+  margin-bottom: 1.5rem;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #38bdf8, #818cf8);
+  transition: width 0.5s ease;
+}
+
+.steps {
+  display: flex;
+  justify-content: space-between;
+}
+
+.step {
+  text-align: center;
+  font-size: 0.85rem;
+  color: #64748b;
+  transition: 0.3s;
+}
+
+.step span {
+  display: block;
+  width: 28px;
+  height: 28px;
+  margin: 0 auto 5px;
+  border-radius: 50%;
+  background: #1e293b;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8rem;
+}
+
+.step.active {
+  color: #38bdf8;
+  font-weight: 600;
+}
+
+.step.active span {
+  background: #38bdf8;
+  color: #0f172a;
+}
+
+/* INFO */
+.tracking-info {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.info-card {
+  background: rgba(255,255,255,0.03);
+  padding: 1rem;
+  border-radius: 14px;
+  border: 1px solid rgba(255,255,255,0.06);
+}
+
+.info-card p {
+  margin: 0;
+  font-size: 0.8rem;
+  color: #94a3b8;
+}

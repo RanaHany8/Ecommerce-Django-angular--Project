@@ -19,6 +19,7 @@ import { CartComponent } from './pages/cart/cart.component';
 import { CheckoutComponent } from './pages/checkout/checkout.component';
 import { OrderService } from './services/order.service';
 import { OrdersComponent } from './pages/orders/orders.component';
+import { TrackingComponent } from './pages/tracking/tracking.component';
 
 export const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -53,6 +54,7 @@ export const routes: Routes = [
   { path: 'cart', component: CartComponent },
   { path: 'checkout', component: CheckoutComponent },
   { path: 'orders', component: OrdersComponent, providers: [OrderService] },
+  { path: 'tracking/:id', component: TrackingComponent },
 
   { path: '**', redirectTo: '' },
 ];

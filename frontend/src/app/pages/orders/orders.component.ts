@@ -1,6 +1,6 @@
 import { CommonModule, CurrencyPipe, DatePipe, NgClass, NgFor, NgIf, TitleCasePipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { RouterLink, Router } from '@angular/router';
 import { OrderService } from '../../services/order.service';
 
 @Component({
@@ -14,7 +14,7 @@ export class OrdersComponent implements OnInit {
   orders: any[] = [];
   isLoading: boolean = true;
 
-  constructor(private orderService: OrderService) { }
+  constructor(private orderService: OrderService, private router: Router) { }
 
   ngOnInit(): void {
     this.loadOrders();
@@ -47,5 +47,14 @@ export class OrdersComponent implements OnInit {
       case 'delivered': return 'status-delivered';
       default: return 'status-default';
     }
+  }
+
+  viewTracking(orderId: number): void {
+    this.router.navigate(['/tracking', orderId]);
+  }
+
+  payNow(orderId: number, event: Event): void {
+    event.stopPropagation();
+    this.router.navigate(['/checkout'], { queryParams: { orderId: orderId } });
   }
 }

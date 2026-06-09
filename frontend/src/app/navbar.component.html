@@ -9,6 +9,7 @@
       <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Curated Catalog</a>
       <a routerLink="/collections" routerLinkActive="active">Exclusives</a>
       <a routerLink="/trends" routerLinkActive="active">2026 Trends</a>
+      <a *ngIf="isLoggedIn" routerLink="/orders" routerLinkActive="active">Order History</a>
       <a routerLink="/admin/dashboard" routerLinkActive="active" class="nav-admin-link">Dashboard</a>
     </div>
 

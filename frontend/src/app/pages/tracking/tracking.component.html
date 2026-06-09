@@ -1,31 +1,66 @@
 <section class="tracking-page">
   <div class="ambient-glow"></div>
-  
+
   <div class="tracking-shell">
+
     <header class="tracking-header">
-      <button routerLink="/orders" class="back-btn">← Back to Orders</button>
-      <h1>Track Your Order</h1>
-      <p>Order Reference: <strong>#{{ orderId }}</strong></p>
+      <button routerLink="/orders" class="back-btn">← Back</button>
+
+      <div class="header-content">
+        <h1>Track Your Order</h1>
+        <p>Order Reference: <strong>#{{ orderId }}</strong></p>
+      </div>
     </header>
 
     <div class="glass-card tracking-card">
-      <div class="status-indicator">
+
+      <!-- STATUS -->
+      <div class="status-box">
         <div class="status-icon" [ngClass]="trackingData.status"></div>
-        <h2>{{ trackingData.status | titlecase }}</h2>
+        <div>
+          <h2>{{ trackingData.status | titlecase }}</h2>
+          <span class="sub-text">Live tracking updates</span>
+        </div>
       </div>
 
+      <!-- PROGRESS -->
       <div class="timeline">
-        <div class="line"></div>
-        <div class="step" [class.active]="true">Placed</div>
-        <div class="step" [class.active]="trackingData.progress >= 2">Shipped</div>
-        <div class="step" [class.active]="trackingData.progress >= 3">Out for Delivery</div>
-        <div class="step" [class.active]="trackingData.progress === 4">Delivered</div>
+        <div class="progress-bar">
+          <div class="progress-fill" [style.width.%]="trackingData.progress * 33.3"></div>
+        </div>
+
+        <div class="steps">
+          <div class="step" [class.active]="true">
+            <span>1</span> Placed
+          </div>
+
+          <div class="step" [class.active]="trackingData.progress >= 2">
+            <span>2</span> Shipped
+          </div>
+
+          <div class="step" [class.active]="trackingData.progress >= 3">
+            <span>3</span> Out for Delivery
+          </div>
+
+          <div class="step" [class.active]="trackingData.progress === 4">
+            <span>4</span> Delivered
+          </div>
+        </div>
       </div>
-      
+
+      <!-- INFO -->
       <div class="tracking-info">
-        <p>Current Location: <strong>{{ trackingData.location }}</strong></p>
-        <p>Estimated Delivery: <strong>{{ trackingData.eta | date }}</strong></p>
+        <div class="info-card">
+          <p>📍 Current Location</p>
+          <strong>{{ trackingData.location }}</strong>
+        </div>
+
+        <div class="info-card">
+          <p>⏱ Estimated Delivery</p>
+          <strong>{{ trackingData.eta | date }}</strong>
+        </div>
       </div>
+
     </div>
   </div>
 </section>
