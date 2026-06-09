@@ -13,37 +13,40 @@
     </div>
 
     <div
-      *ngIf="!isLoading && (!cartData || cartData.items.length === 0)"
+      *ngIf="!isLoading && (!cartItems || cartItems.length === 0)"
       class="glass-card state-card empty-state"
     >
       <h2>Your cart is empty</h2>
       <p>Add products and come back to complete your order.</p>
-      <a routerLink="/catalog" class="primary-btn">Continue Shopping</a>
+      <a routerLink="/" class="primary-btn">Continue Shopping</a>
     </div>
 
-    <div *ngIf="!isLoading && cartData && cartData.items.length > 0" class="cart-grid">
+    <div *ngIf="!isLoading && cartItems && cartItems.length > 0" class="cart-grid">
       <div class="glass-card cart-items-panel">
-        <div *ngFor="let item of cartData.items" class="cart-item-row">
+        <div *ngFor="let item of cartItems" class="cart-item-row">
+          
           <div class="product-info">
             <img
-              [src]="item.product.image || 'assets/images/default-product.png'"
-              [alt]="item.product_title"
+              [src]="item.product?.image || 'https://placehold.co/150'"
+              [alt]="item.product?.title"
               class="product-thumb"
             />
             <div>
-              <h3 class="product-title">{{ item.product_title }}</h3>
-              <p class="product-price">Price: {{ item.product_price | currency }}</p>
+              <h3 class="product-title">{{ item.product?.title || 'Unknown Product' }}</h3>
+              <p class="product-price">Price: {{ (item.product?.price || 0) | currency }}</p>
             </div>
           </div>
 
           <div class="item-actions">
             <div class="qty-control">
               <button type="button" (click)="changeQuantity(item.id, item.quantity, -1)">-</button>
-              <span>{{ item.quantity }}</span>
+              <span>{{ item.quantity || 1 }}</span>
               <button type="button" (click)="changeQuantity(item.id, item.quantity, 1)">+</button>
             </div>
 
-            <span class="item-subtotal">{{ item.subtotal | currency }}</span>
+            <span class="item-subtotal">
+              {{ ((item.product?.price || 0) * (item.quantity || 1)) | currency }}
+            </span>
 
             <button
               type="button"
@@ -61,11 +64,13 @@
                 <path
                   stroke-linecap="round"
                   stroke-linejoin="round"
+                  path-linecap="round"
                   d="M3 6h18M8 6V4h8v2m-7 4v8m6-8v8M6 6l1 14h10l1-14"
                 />
               </svg>
             </button>
           </div>
+
         </div>
       </div>
 
@@ -73,7 +78,7 @@
         <h2>Order Summary</h2>
         <div class="summary-line">
           <span>Total Items Price</span>
-          <strong>{{ cartData.total_cart_price | currency }}</strong>
+          <strong>{{ totalPrice | currency }}</strong>
         </div>
         <a routerLink="/checkout" class="checkout-btn">Proceed to Checkout</a>
       </aside>

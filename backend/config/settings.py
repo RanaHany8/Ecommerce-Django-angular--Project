@@ -16,19 +16,18 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
     'corsheaders',
     'rest_framework',
     'django_filters',
     'cloudinary_storage',
     'cloudinary',
-    'catalog',
-
-    'accounts',
-    'user_features',
     'drf_yasg',
 
+    'catalog',
+    'accounts',
+    'user_features',
     'dashboard',
-
     'products',
     'cart',
     'orders',
@@ -68,10 +67,10 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'shopsphere_db',
-        'USER': 'root', 
-
-        'PASSWORD': '', 
-        'HOST': '127.0.0.1', 
+        'USER': 'root',
+        
+        'PASSWORD': '',
+        'HOST': '127.0.0.1',
         'PORT': '3306',
         'OPTIONS': {
             'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
@@ -103,27 +102,55 @@ REST_FRAMEWORK = {
     ],
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 9,
-    'DEFAULT_AUTHENTICATION_CLASSES':(
+    'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
 }
 
-CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_ALL_ORIGINS = False
 
-# Cloudinary configuration
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:4200",
+    "http://127.0.0.1:4200",
+]
+
+CORS_ALLOW_CREDENTIALS = True
+
+CORS_ALLOW_HEADERS = [
+    'accept',
+    'accept-encoding',
+    'authorization',
+    'content-type',
+    'dnt',
+    'origin',
+    'user-agent',
+    'x-csrftoken',
+    'x-requested-with',
+    'cookie',
+]
+
+SESSION_COOKIE_SAMESITE = 'Lax'
+SESSION_COOKIE_HTTPONLY = True
+SESSION_COOKIE_SECURE = False
+
+CSRF_COOKIE_SAMESITE = 'Lax'
+CSRF_COOKIE_SECURE = False
+CSRF_COOKIE_HTTPONLY = False
+
+CSRF_TRUSTED_ORIGINS = [
+    "http://localhost:4200",
+    "http://127.0.0.1:4200",
+]
+
+
 CLOUDINARY_STORAGE = {
     'CLOUD_NAME': 'denxiy4ph',
     'API_KEY': '998851851626327',
     'API_SECRET': 'Vhc0pH33iXBJMJQTWCvar-wm4T0',
 }
 
-CLOUDINARY = {
-    'cloud_name': CLOUDINARY_STORAGE['CLOUD_NAME'],
-    'api_key': CLOUDINARY_STORAGE['API_KEY'],
-    'api_secret': CLOUDINARY_STORAGE['API_SECRET'],
-}
-
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'

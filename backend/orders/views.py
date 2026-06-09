@@ -54,8 +54,9 @@ class OrderViewSet(viewsets.ModelViewSet):
                 price=item.product.price,
                 quantity=item.quantity
             )
-            item.product.stock -= item.quantity
-            item.product.save()
+            if item.product.stock >= item.quantity:
+                item.product.stock -= item.quantity
+                item.product.save()
 
         cart.items.all().delete()
 

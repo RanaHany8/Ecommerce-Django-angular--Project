@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from .models import Order, OrderItem, Coupon
+from cart.serializers import ProductSimpleSerializer 
 
 class CouponSerializer(serializers.ModelSerializer):
     class Meta:
@@ -7,11 +8,11 @@ class CouponSerializer(serializers.ModelSerializer):
         fields = ['code', 'discount_percent', 'active', 'start_valid_from', 'end_valid_to']
 
 class OrderItemSerializer(serializers.ModelSerializer):
-    product_title = serializers.CharField(source='product.title', read_only=True)
+    product = ProductSimpleSerializer(read_only=True)
 
     class Meta:
         model = OrderItem
-        fields = ['id', 'product', 'product_title', 'price', 'quantity']
+        fields = ['id', 'product', 'price', 'quantity']
 
 class OrderSerializer(serializers.ModelSerializer):
     items = OrderItemSerializer(many=True, read_only=True)

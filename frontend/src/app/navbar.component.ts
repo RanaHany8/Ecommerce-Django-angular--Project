@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { Router, RouterLink, RouterLinkActive, NavigationEnd } from '@angular/router';
 import { filter, Subscription } from 'rxjs';
 import { AuthService } from './services/auth.service';
+import { CartService } from './services/cart.service';
 
 @Component({
   selector: 'app-navbar',
@@ -16,23 +17,38 @@ export class NavbarComponent implements OnDestroy {
   currentUserName = '';
   showNavbar = true;
   menuOpen = false;
+  cartCount = 0; 
 
   private readonly subscriptions = new Subscription();
 
-  constructor(private readonly auth: AuthService, private readonly router: Router) {
+  constructor(
+    private readonly auth: AuthService,
+    private readonly router: Router,
+    private readonly cartService: CartService
+  ) {
     this.subscriptions.add(
-      this.router.events.pipe(filter((event): event is NavigationEnd => event instanceof NavigationEnd)).subscribe((event) => {
+      this.router.events.pipe(
+        filter((event): event is NavigationEnd => event instanceof NavigationEnd)
+      ).subscribe((event) => {
         this.updateNavbarVisibility(event.urlAfterRedirects || event.url);
         this.syncAuthState();
       })
     );
 
     this.subscriptions.add(
-      this.auth.authState$.subscribe((state) => {
+      this.auth.authState$.subscribe((state: any) => {
         this.isLoggedIn = state.isLoggedIn;
         this.currentUserName = state.username;
       })
     );
+
+    if (this.cartService.cartCount$) {
+      this.subscriptions.add(
+        this.cartService.cartCount$.subscribe((count: number) => {
+          this.cartCount = count || 0;
+        })
+      );
+    }
 
     this.updateNavbarVisibility(this.router.url);
     this.syncAuthState();
@@ -64,7 +80,12 @@ export class NavbarComponent implements OnDestroy {
   @HostListener('document:click', ['$event'])
   closeDropdown(event: MouseEvent): void {
     const target = event.target as HTMLElement | null;
-    if (!target || (!target.closest('.user-pill') && !target.closest('.dropdown-menu'))) {
+
+    if (
+      !target ||
+      (!target.closest('.user-pill') &&
+        !target.closest('.dropdown-menu'))
+    ) {
       this.menuOpen = false;
     }
   }

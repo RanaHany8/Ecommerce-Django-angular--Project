@@ -1,10 +1,18 @@
-from django.urls import path, include
-from rest_framework.routers import DefaultRouter
+from django.urls import path
 from .views import CartViewSet
 
-router = DefaultRouter()
-router.register(r'', CartViewSet, basename='cart')
+# فك الروابط يدوياً لضمان ثبات الاستقبال والـ Context بنسبة 100%
+cart_list = CartViewSet.as_view({'get': 'list'})
+cart_add = CartViewSet.as_view({'post': 'add_item'})
+cart_update = CartViewSet.as_view({'put': 'update_quantity'})
+cart_remove = CartViewSet.as_view({'delete': 'remove_item'})
 
 urlpatterns = [
-    path('', include(router.urls)),
+    path('', cart_list, name='cart-detail'),
+    
+    path('add-item/', cart_add, name='cart-add-item'),
+    
+    path('update-quantity/<int:pk>/', cart_update, name='cart-update-quantity'),
+    
+    path('remove-item/<int:pk>/', cart_remove, name='cart-remove-item'),
 ]

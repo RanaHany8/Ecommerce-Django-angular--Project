@@ -1,12 +1,14 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { Subscription } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
 
 import { ProductDetails } from '../../models/store.models';
 import { AuthService } from '../../services/auth.service';
 import { StoreService } from '../../services/store.service';
 import { WishlistService } from '../../services/wishlist.service';
+import { CartService } from '../../services/cart.service';
 import { ProductReviewsComponent } from '../../components/product-reviews/product-reviews.component';
 
 @Component({
@@ -41,7 +43,7 @@ import { ProductReviewsComponent } from '../../components/product-reviews/produc
 
             <div class="info-container">
               <div class="info-content w-full">
-                <nav class="breadcrumb">{{ product.category.name }} / Details</nav>
+                <nav class="breadcrumb">{{ product.category?.name }} / Details</nav>
                 <h2 class="product-title">{{ product.name }}</h2>
                 
                 <div class="price-tag">
@@ -61,6 +63,15 @@ import { ProductReviewsComponent } from '../../components/product-reviews/produc
                 </button>
 
                 <div class="action-zone">
+                  <div class="quantity-selector" *ngIf="product && product.stock > 0">
+                    <div class="qty-label">Quantity</div>
+                    <div class="qty-controls">
+                      <button type="button" (click)="decreaseQty()" [disabled]="quantity <= 1">—</button>
+                      <div class="qty-number">{{ quantity }}</div>
+                      <button type="button" (click)="increaseQty()" [disabled]="product && quantity >= product.stock">+</button>
+                    </div>
+                  </div>
+
                   <div class="action-row">
                     <button type="button" class="btn-wishlist" [class.filled]="inWishlist" (click)="toggleWishlist($event)" aria-label="Wishlist">
                       <svg viewBox="0 0 24 24" class="heart-svg" aria-hidden="true">
@@ -68,12 +79,12 @@ import { ProductReviewsComponent } from '../../components/product-reviews/produc
                       </svg>
                       <span>{{ inWishlist ? 'Saved' : 'Save' }}</span>
                     </button>
-                    <button class="btn-primary btn-grow">
-                      <span class="btn-text">Acquire This Piece</span>
+                    <button class="btn-primary btn-grow" (click)="addToCart()" [disabled]="product.stock <= 0 || addedToCart">
+                      <span class="btn-text">{{ addedToCart ? 'Added!' : (product.stock > 0 ? 'Add to Cart' : 'Out of Stock') }}</span>
                       <span class="btn-glow"></span>
                     </button>
                   </div>
-                  
+
                   <div class="inventory-status">
                     <span class="label">Availability</span>
                     <span class="status-badge" [class.out]="product.stock <= 0">
@@ -87,7 +98,7 @@ import { ProductReviewsComponent } from '../../components/product-reviews/produc
           </div>
         </div>
 
-        <div id="product-reviews" class="reviews-anchor-target" *ngIf="product">
+        <div #reviewsContainer class="reviews-anchor-target" *ngIf="product">
           <app-product-reviews
             [productId]="product.id"
             [averageRating]="product.average_rating ?? null"
@@ -111,64 +122,10 @@ import { ProductReviewsComponent } from '../../components/product-reviews/produc
       display: block;
     }
 
-    .glass-navbar {
-      position: fixed;
-      top: 0; left: 0; right: 0;
-      z-index: 1000;
-      background: rgba(255, 255, 255, 0.4);
-      backdrop-filter: blur(15px);
-      border-bottom: 1px solid rgba(255, 255, 255, 0.3);
-      padding: 1rem 0;
-    }
-
     .container-custom {
       max-width: 1440px;
       margin: 0 auto;
       padding: 0 2rem;
-    }
-
-    .nav-flex {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .brand {
-      font-size: 1.4rem;
-      font-weight: 800;
-      color: var(--dark);
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      text-decoration: none;
-    }
-
-    .logo-icon { color: var(--primary); font-size: 1.6rem; }
-    .brand .highlight { color: var(--primary); }
-
-    .nav-links { display: flex; gap: 2rem; }
-    .nav-item {
-      text-decoration: none;
-      color: #64748b;
-      font-weight: 600;
-      font-size: 0.95rem;
-      transition: 0.3s;
-    }
-    .nav-item:hover { color: var(--dark); }
-
-    .nav-meta { display: flex; align-items: center; gap: 1.5rem; }
-    .icon-btn { background: none; border: none; font-size: 1.2rem; cursor: pointer; }
-
-    .cart-pill {
-      background: var(--dark);
-      color: white;
-      padding: 0.4rem 1rem;
-      border-radius: 50px;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      font-weight: 800;
     }
 
     .luxury-wrapper {
@@ -434,6 +391,75 @@ import { ProductReviewsComponent } from '../../components/product-reviews/produc
     .animate-reveal {
       animation: fadeInUp 0.8s cubic-bezier(0.19, 1, 0.22, 1) both;
     }
+
+    .quantity-selector {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1.5rem;
+      background: rgba(15, 23, 42, 0.03);
+      padding: 0.75rem 1.5rem;
+      border-radius: 16px;
+      border: 1px solid rgba(15, 23, 42, 0.05);
+    }
+
+    .qty-label {
+      font-weight: 700;
+      font-size: 0.9rem;
+      color: #64748b;
+    }
+
+    .qty-controls {
+      display: flex;
+      align-items: center;
+      gap: 1.25rem;
+    }
+
+    .qty-controls button {
+      background: white;
+      border: 1px solid #e2e8f0;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      font-weight: 800;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: 0.2s;
+      color: var(--dark);
+    }
+
+    .qty-controls button:hover:not(:disabled) {
+      background: var(--dark);
+      color: white;
+      border-color: var(--dark);
+    }
+
+    .qty-controls button:disabled {
+      opacity: 0.3;
+      cursor: not-allowed;
+    }
+
+    .qty-number {
+      font-weight: 800;
+      font-size: 1.1rem;
+      min-width: 20px;
+      text-align: center;
+      color: var(--dark);
+    }
+
+    .btn-primary:disabled {
+      background: #cbd5e1 !important;
+      color: #94a3b8 !important;
+      cursor: not-allowed;
+      transform: none !important;
+      box-shadow: none !important;
+    }
+
+    .status-badge.out {
+      color: var(--accent);
+    }
     @keyframes fadeInUp {
       from { opacity: 0; transform: translateY(30px); }
       to { opacity: 1; transform: translateY(0); }
@@ -441,98 +467,112 @@ import { ProductReviewsComponent } from '../../components/product-reviews/produc
 
     @media (max-width: 1024px) {
       .grid-layout { grid-template-columns: 1fr; }
-      .image-container { height: 500px; }
-      .info-container { padding: 2.5rem; }
-      .nav-links { display: none; }
+      .image-container { height: 450px; }
+      .info-container { padding: 2rem; }
     }
-  `]
+  `],
 })
 export class ProductDetailsComponent implements OnInit, OnDestroy {
-  product?: ProductDetails;
-  selectedImage = '';
-  inWishlist = false;
+  @ViewChild('reviewsContainer') reviewsContainer!: ElementRef;
 
-  private subs = new Subscription();
+  product: ProductDetails | null = null;
+  selectedImage = '';
+  quantity = 1;
+  inWishlist = false;
+  addedToCart = false;
+  private sub = new Subscription();
 
   constructor(
     private readonly route: ActivatedRoute,
     private readonly store: StoreService,
     private readonly wishlist: WishlistService,
     private readonly auth: AuthService,
+    private readonly cartService: CartService,
     private readonly router: Router
   ) {}
 
   ngOnInit(): void {
-    const id = Number(this.route.snapshot.paramMap.get('id'));
-    this.store.getProductDetails(id).subscribe({
-      next: (res) => {
-        this.product = res;
-        if (res.image) {
-          this.selectedImage = res.image;
-        } else if (res.images && res.images.length > 0) {
-          this.selectedImage = res.images[0].image_url;
-        } else {
-          this.selectedImage = 'https://placehold.co/600x800?text=No+Image';
-        }
-        this.syncWishlistState();
-      },
-      error: (err) => console.error('Error fetching product details:', err),
-    });
-
-    this.subs.add(
-      this.auth.authState$.subscribe((s) => {
-        if (s.isLoggedIn) {
-          this.wishlist.load().subscribe();
-        } else {
-          this.inWishlist = false;
-        }
-      })
+    this.sub.add(
+      this.route.paramMap
+        .pipe(
+          switchMap((params) => {
+            const id = Number(params.get('id'));
+            return this.store.getProductDetails(id);
+          })
+        )
+        .subscribe((product) => {
+          this.product = product;
+          this.selectedImage = product.image || '';
+          this.quantity = 1; // إعادة تعيين الكمية عند تغيير المنتج
+        })
     );
-    this.subs.add(
-      this.wishlist.items$.subscribe(() => {
-        this.syncWishlistState();
+
+    this.sub.add(
+      this.wishlist.items$.subscribe((items) => {
+        if (this.product) {
+          this.inWishlist = items.some((i) => i.product.id === this.product?.id);
+        }
       })
     );
   }
 
   ngOnDestroy(): void {
-    this.subs.unsubscribe();
+    this.sub.unsubscribe();
+  }
+
+  increaseQty(): void {
+    if (this.product && this.quantity < this.product.stock) {
+      this.quantity++;
+    }
+  }
+
+  decreaseQty(): void {
+    if (this.quantity > 1) {
+      this.quantity--;
+    }
   }
 
   toggleWishlist(event: Event): void {
     event.preventDefault();
-    if (!this.product) {
-      return;
-    }
     if (!localStorage.getItem('access_token')) {
       void this.router.navigate(['/login']);
       return;
     }
-    this.wishlist.toggle(this.product.id).subscribe();
+    if (this.product) {
+      this.wishlist.toggle(this.product.id).subscribe();
+    }
   }
 
-  private syncWishlistState(): void {
-    if (!this.product) {
-      return;
-    }
-    this.inWishlist = this.wishlist.isInWishlist(this.product.id);
-  }
+  addToCart(): void {
+    if (!this.product || this.product.stock <= 0) return;
 
-  onReviewsStatsChanged(): void {
-    if (!this.product) {
-      return;
-    }
-    const id = this.product.id;
-    this.store.getProductDetails(id).subscribe({
-      next: (res) => {
-        this.product = res;
-        this.syncWishlistState();
+    this.cartService.addToCart(this.product.id, this.quantity).subscribe({
+      next: () => {
+        this.addedToCart = true;
+        console.log(`Successfully added ${this.quantity} item(s) to cart.`);
+        
+        setTimeout(() => {
+          this.addedToCart = false;
+        }, 2000);
       },
-      error: (err) => console.error('Error refreshing product:', err),
+      error: (err) => console.error('Error adding to cart', err)
     });
   }
 
   scrollToReviews(): void {
-    document.getElementById('product-reviews')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    if (this.reviewsContainer) {
+      this.reviewsContainer.nativeElement.scrollIntoView({ behavior: 'smooth' });
+    }
+  }
+
+  onReviewsStatsChanged(): void {
+    if (this.product) {
+      this.store.getProductDetails(this.product.id).subscribe((updated) => {
+        if (this.product) {
+          this.product.average_rating = updated.average_rating;
+          this.product.review_count = updated.review_count;
+        }
+      });
+    }
   }
 }

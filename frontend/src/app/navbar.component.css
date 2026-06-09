@@ -63,8 +63,10 @@
   color: #111827;
 }
 
+/* تعديل هنا: تحويل لون الـ active ليتماشى مع السمة البنفسجية للموقع */
 .active {
-  color: #2563eb;
+  color: #6366f1 !important;
+  font-weight: 800;
 }
 
 .nav-meta {
@@ -118,6 +120,11 @@
   padding: 0.45rem 1rem;
   border-radius: 999px;
   font-weight: 800;
+  transition: transform 0.2s ease;
+}
+
+.cart-pill:hover {
+  transform: scale(1.03);
 }
 
 .user-pill {
@@ -154,48 +161,55 @@
   position: absolute;
   right: 0;
   top: calc(100% + 0.65rem);
-  min-width: 180px;
+  min-width: 190px;
   background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(16px);
   border: 1px solid rgba(15, 23, 42, 0.08);
   border-radius: 18px;
   box-shadow: 0 25px 45px rgba(15, 23, 42, 0.12);
-  padding: 0.75rem 0.5rem;
+  padding: 0.5rem;
   display: flex;
   flex-direction: column;
   gap: 0.25rem;
   animation: popDown 0.22s ease;
 }
 
+/* تعديل هنا: جعل العناصر تصطف بشكل مرن ومحاذاة ممتازة */
 .dropdown-menu a,
 .dropdown-menu button {
-  display: block;
+  display: flex;
+  align-items: center;
   width: 100%;
   text-align: left;
   border: none;
   background: transparent;
   color: #0f172a;
-  padding: 0.85rem 0.9rem;
+  padding: 0.75rem 0.9rem;
   border-radius: 12px;
   font-weight: 700;
   cursor: pointer;
   text-decoration: none;
+  box-sizing: border-box;
+  font-family: inherit;
+  font-size: 0.95rem;
 }
 
 .dropdown-menu a:hover,
 .dropdown-menu button:hover {
-  background: rgba(99, 102, 241, 0.1);
+  background: rgba(99, 102, 241, 0.08);
+  color: #6366f1;
 }
 
 .nav-auth {
-  border: 1px solid rgba(37, 99, 235, 0.28);
+  border: 1px solid rgba(99, 102, 241, 0.28);
   padding: 0.5rem 1rem;
   border-radius: 999px;
-  transition: background 0.2s ease;
+  transition: background 0.2s ease, color 0.2s ease;
 }
 
 .nav-auth:hover {
-  background: rgba(37, 99, 235, 0.08);
+  background: rgba(99, 102, 241, 0.08);
+  color: #6366f1;
 }
 
 @media (max-width: 900px) {
@@ -234,23 +248,11 @@
 }
 
 @keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(-5px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(-5px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 @keyframes popDown {
-  from {
-    opacity: 0;
-    transform: translateY(-10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
 }

@@ -8,6 +8,7 @@ import { Category, Product } from '../../models/store.models';
 import { ProductQuery, StoreService } from '../../services/store.service';
 import { AuthService } from '../../services/auth.service';
 import { WishlistService } from '../../services/wishlist.service';
+import { CartService } from '../../services/cart.service';
 
 @Component({
   selector: 'app-home',
@@ -80,7 +81,6 @@ import { WishlistService } from '../../services/wishlist.service';
             </div>
           </aside>
 
-          <!-- Main Products Area -->
           <main class="content-view">
             <div class="results-bar animate-fade">
               <div class="results-info">Found <b>{{ totalCount }}</b> Masterpieces</div>
@@ -91,7 +91,6 @@ import { WishlistService } from '../../services/wishlist.service';
               </div>
             </div>
 
-            <!-- Products Grid -->
             <div class="products-grid" *ngIf="!loading && products.length; else stateBlock">
               <div
                 class="art-card"
@@ -123,17 +122,23 @@ import { WishlistService } from '../../services/wishlist.service';
                   </div>
                 </div>
                 <div class="art-info">
-                  <span class="art-cat">{{ product.category.name }}</span>
+                  <span class="art-cat">{{ product.category?.name }}</span>
                   <h4 class="art-title">{{ product.name }}</h4>
                   <p class="art-desc">{{ product.description }}</p>
                   <div class="art-meta">
                     <span class="art-price">{{ product.price | number : '1.2-2' }} <i>USD</i></span>
+                    <button 
+                      type="button" 
+                      class="add-to-cart-btn" 
+                      (click)="addToCart(product, $event)"
+                    >
+                      + Add to Cart
+                    </button>
                   </div>
                 </div>
               </div>
             </div>
 
-            <!-- States (Loading/Empty/Error) -->
             <ng-template #stateBlock>
               <div *ngIf="loading" class="products-grid">
                 <div class="skeleton-art" *ngFor="let _ of skeletons"></div>
@@ -161,81 +166,6 @@ import { WishlistService } from '../../services/wishlist.service';
         --text-main: #0f172a;
         display: block;
         font-family: 'Plus Jakarta Sans', sans-serif;
-      }
-
-      .glass-navbar {
-        position: fixed;
-        top: 0; left: 0; right: 0;
-        z-index: 1000;
-        background: rgba(255, 255, 255, 0.4);
-        backdrop-filter: blur(15px);
-        border-bottom: 1px solid rgba(255, 255, 255, 0.3);
-        padding: 1rem 0;
-      }
-
-      .nav-flex {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-      }
-
-      .brand {
-        font-size: 1.4rem;
-        font-weight: 800;
-        color: var(--text-main);
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-      }
-
-      .logo-icon { color: var(--accent); font-size: 1.6rem; }
-      .brand .highlight { color: var(--accent); }
-
-      .nav-links { display: flex; gap: 2rem; }
-      .nav-item {
-        text-decoration: none;
-        color: #64748b;
-        font-weight: 600;
-        font-size: 0.95rem;
-        transition: 0.3s;
-        position: relative;
-      }
-
-      .nav-item.active, .nav-item:hover { color: var(--text-main); }
-      .nav-item.active::after {
-        content: '';
-        position: absolute; bottom: -5px; left: 0;
-        width: 100%; height: 2px;
-        background: var(--accent);
-        border-radius: 2px;
-      }
-
-      .nav-meta { display: flex; align-items: center; gap: 1.5rem; }
-      .icon-btn { background: none; border: none; font-size: 1.2rem; cursor: pointer; }
-      .user-pill, .nav-auth {
-        text-decoration: none;
-        color: var(--text-main);
-        font-weight: 700;
-      }
-      .user-pill {
-        background: rgba(99, 102, 241, 0.1);
-        border: 1px solid rgba(99, 102, 241, 0.35);
-        padding: 0.35rem 0.8rem;
-        border-radius: 999px;
-      }
-
-      .cart-pill {
-        background: var(--text-main);
-        color: white;
-        padding: 0.4rem 1rem;
-        border-radius: 50px;
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-        font-weight: 800;
-        cursor: pointer;
-        transition: 0.3s;
       }
 
       .luxury-wrapper {
@@ -270,7 +200,6 @@ import { WishlistService } from '../../services/wishlist.service';
         padding: 0 2rem;
       }
 
-      /* 2. Hero Section */
       .hero-section {
         padding: 6rem 0 4rem; 
         text-align: center;
@@ -310,7 +239,6 @@ import { WishlistService } from '../../services/wishlist.service';
         font-weight: 400;
       }
 
-      /* 3. Grid Layout */
       .app-grid {
         display: grid;
         grid-template-columns: 320px 1fr;
@@ -318,7 +246,6 @@ import { WishlistService } from '../../services/wishlist.service';
         margin-top: 1rem;
       }
 
-      /* 4. Sidebar Glass Design */
       .glass-sidebar {
         position: sticky;
         top: 100px; 
@@ -388,7 +315,6 @@ import { WishlistService } from '../../services/wishlist.service';
 
       .apply-trigger:hover { transform: translateY(-3px); box-shadow: 0 15px 30px rgba(0,0,0,0.2); }
 
-      /* 5. Product Cards Art Design */
       .products-grid {
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -401,7 +327,7 @@ import { WishlistService } from '../../services/wishlist.service';
         padding: 0.8rem;
         border: 1px solid rgba(255,255,255,0.4);
         transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        cursor: pointer;
+        position: relative;
       }
 
       .art-card:hover { transform: scale(1.03); background: rgba(255,255,255,0.9); }
@@ -423,26 +349,10 @@ import { WishlistService } from '../../services/wishlist.service';
         transition: transform 0.2s ease, box-shadow 0.2s ease;
       }
 
-      .wishlist-heart:hover {
-        transform: scale(1.08);
-      }
-
-      .heart-svg {
-        width: 22px;
-        height: 22px;
-      }
-
-      .wishlist-heart .heart-svg path {
-        fill: transparent;
-        stroke: #ec4899;
-        stroke-width: 1.6;
-      }
-
-      .wishlist-heart.filled .heart-svg path {
-        fill: #ec4899;
-        stroke: #be185d;
-        stroke-width: 0.6;
-      }
+      .wishlist-heart:hover { transform: scale(1.08); }
+      .heart-svg { width: 22px; height: 22px; }
+      .wishlist-heart .heart-svg path { fill: transparent; stroke: #ec4899; stroke-width: 1.6; }
+      .wishlist-heart.filled .heart-svg path { fill: #ec4899; stroke: #be185d; stroke-width: 0.6; }
 
       .art-img-wrap {
         height: 320px; border-radius: 22px; overflow: hidden;
@@ -459,33 +369,33 @@ import { WishlistService } from '../../services/wishlist.service';
       }
 
       .art-card:hover .art-overlay { opacity: 1; }
-      .view-label {
-        background: white; padding: 0.8rem 1.5rem; border-radius: 50px;
-        font-weight: 800; font-size: 0.85rem;
-      }
+      .view-label { background: white; padding: 0.8rem 1.5rem; border-radius: 50px; font-weight: 800; font-size: 0.85rem; }
 
       .art-info { padding: 1.2rem 0.5rem; }
       .art-cat { color: var(--accent); font-weight: 800; font-size: 0.75rem; text-transform: uppercase; }
       .art-title { font-size: 1.1rem; font-weight: 800; margin: 0.4rem 0; color: var(--text-main); }
       .art-desc {
-        margin: 0 0 0.8rem;
-        color: #475569;
-        font-weight: 600;
-        font-size: 0.9rem;
-        line-height: 1.45;
-        display: -webkit-box;
-        -webkit-line-clamp: 2;
-        -webkit-box-orient: vertical;
-        overflow: hidden;
+        margin: 0 0 0.8rem; color: #475569; font-weight: 600; font-size: 0.9rem; line-height: 1.45;
+        display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
       }
       .art-price { font-size: 1.3rem; font-weight: 800; color: var(--accent); }
       .art-price i { font-style: normal; font-size: 0.8rem; color: #94a3b8; }
 
-      /* Animations */
+      .add-to-cart-btn {
+        background: var(--text-main); color: white; border: none; 
+        padding: 0.5rem 1rem; border-radius: 12px; font-weight: 700; 
+        font-size: 0.85rem; cursor: pointer; transition: 0.2s; 
+        position: relative; z-index: 10;
+      }
+      .add-to-cart-btn:hover { background: var(--accent); transform: translateY(-1px); }
+
+      .results-bar { display: flex; justify-content: space-between; margin-bottom: 1.5rem; font-weight: 600; }
+      .modern-pagination button { background: white; border: 1px solid #e2e8f0; padding: 0.3rem 0.7rem; cursor: pointer; border-radius: 6px; margin: 0 0.2rem; }
+      .modern-pagination button:disabled { opacity: 0.5; cursor: not-allowed; }
+
       .animate-reveal { animation: reveal 1s ease-out; }
       @keyframes reveal { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
 
-      /* Responsive */
       @media (max-width: 1024px) {
         .app-grid { grid-template-columns: 1fr; }
         .glass-sidebar { position: static; }
@@ -522,7 +432,8 @@ export class HomeComponent implements OnInit, OnDestroy {
     private readonly store: StoreService,
     private readonly wishlist: WishlistService,
     private readonly router: Router,
-    private readonly auth: AuthService
+    private readonly auth: AuthService,
+    private readonly cartService: CartService
   ) {}
 
   ngOnInit(): void {
@@ -589,5 +500,20 @@ export class HomeComponent implements OnInit, OnDestroy {
   onImageError(event: Event) {
     (event.target as HTMLImageElement).src = this.fallbackImage;
   }
-}
 
+  addToCart(product: Product, event: Event): void {
+    if (event) {
+      event.preventDefault();
+      event.stopPropagation();
+    }
+    
+    if (!product) return;
+
+    this.cartService.addToCart(product.id, 1).subscribe({
+      next: () => {
+        console.log('Product added to cart successfully!');
+      },
+      error: (err) => console.error('Error adding to cart', err)
+    });
+  }
+}

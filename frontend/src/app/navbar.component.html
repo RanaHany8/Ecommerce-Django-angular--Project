@@ -6,9 +6,7 @@
     </a>
 
     <div class="nav-links">
-      <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"
-        >Curated Catalog</a
-      >
+      <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Curated Catalog</a>
       <a routerLink="/collections" routerLinkActive="active">Exclusives</a>
       <a routerLink="/trends" routerLinkActive="active">2026 Trends</a>
       <a routerLink="/admin/dashboard" routerLinkActive="active" class="nav-admin-link">Dashboard</a>
@@ -16,9 +14,10 @@
 
     <div class="nav-meta">
       <button class="icon-btn search-trigger" type="button" aria-label="Search">🔍</button>
-      <div class="cart-pill">
+
+      <div class="cart-pill" routerLink="/cart" style="cursor: pointer">
         <span class="cart-icon">🛒</span>
-        <span class="count">0</span>
+        <span class="count">{{ cartCount ?? 0 }}</span>
       </div>
 
       <ng-container *ngIf="isLoggedIn; else guestLinks">
@@ -29,6 +28,7 @@
           aria-label="Wishlist"
           >♡</a
         >
+
         <button class="user-pill" type="button" (click)="toggleDropdown()">
           <span class="user-avatar">{{ avatarInitial }}</span>
           <span class="user-name">{{ currentUserName }}</span>
@@ -37,9 +37,7 @@
 
         <div *ngIf="menuOpen" class="dropdown-menu">
           <a routerLink="/profile" (click)="menuOpen = false">Profile</a>
-
-          <a routerLink="/seller-dashboard" (click)="menuOpen = false"> Seller Dashboard </a>
-
+          <a routerLink="/seller-dashboard" (click)="menuOpen = false">Seller Dashboard</a>
           <button type="button" (click)="logout()">Logout</button>
         </div>
       </ng-container>

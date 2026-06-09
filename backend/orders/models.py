@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth import get_user_model
-from products.models import Product 
+from products.models import Product
 
 User = get_user_model()
 
@@ -49,4 +49,4 @@ class OrderItem(models.Model):
     quantity = models.PositiveIntegerField(default=1)
 
     def __str__(self):
-        return f"Item: {self.product.title if self.product else 'Unknown'} (x{self.quantity}) in Order {self.order.id}"
+        return f"Item: {self.product.name if self.product else 'Unknown'} (x{self.quantity}) in Order {self.order.id}"

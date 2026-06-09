@@ -42,7 +42,13 @@ export class CheckoutComponent implements OnInit {
   loadCartSummary(): void {
     this.cartService.getCart().subscribe({
       next: (data: any) => {
-        this.cartData = data;
+        if (Array.isArray(data)) {
+          this.cartData = data[0];
+        } else if (data && data.results && Array.isArray(data.results)) {
+          this.cartData = data.results[0];
+        } else {
+          this.cartData = data;
+        }
         this.isLoading = false;
       },
       error: (err: any) => {
