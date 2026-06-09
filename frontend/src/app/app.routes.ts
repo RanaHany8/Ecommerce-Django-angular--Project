@@ -15,6 +15,9 @@ import { adminGuard } from './guards/admin.guard';
 import { SellerDashboardComponent } from './pages/seller-dashboard/seller-dashboard.component';
 import { SellerPayoutsComponent } from './pages/seller-payouts/seller-payouts.component';
 
+import { CartComponent } from './pages/cart/cart.component';
+
+
 export const routes: Routes = [
   { path: '', component: HomeComponent },
   { path: 'products/:id', component: ProductDetailsComponent },
@@ -44,6 +47,8 @@ export const routes: Routes = [
   },
 
   { path: 'seller-dashboard', component: SellerDashboardComponent },
+  { path: 'cart', component: CartComponent },
+  
 
   { path: '**', redirectTo: '' },
 ];

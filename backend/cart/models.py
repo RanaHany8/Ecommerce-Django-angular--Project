@@ -1,39 +1,23 @@
-from rest_framework import serializers
-from .models import Cart, CartItem  
+from django.db import models
+from django.contrib.auth import get_user_model
 from catalog.models import Product
 
-class ProductSimpleSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Product
-        fields = ['id', 'title', 'price', 'image', 'stock']
+User = get_user_model()
+
+class Cart(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
+    session_id = models.CharField(max_length=255, null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    
+    def __str__(self):
+        return f"Cart {self.id} - User: {self.user or 'Guest'}"
 
 
-class CartItemSerializer(serializers.ModelSerializer):
-    product_title = serializers.CharField(source='product.title', read_only=True)
-    product_price = serializers.DecimalField(source='product.price', max_digits=10, decimal_places=2, read_only=True)
-    subtotal = serializers.SerializerMethodField()
+class CartItem(models.Model):
+    cart = models.ForeignKey(Cart, on_delete=models.CASCADE, related_name='items')
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    quantity = models.PositiveIntegerField(default=1)
 
-    class Meta:
-        model = CartItem
-        fields = ['id', 'product', 'product_title', 'product_price', 'quantity', 'subtotal']
-
-    def get_subtotal(self, obj):
-        return obj.product.price * obj.quantity
-
-
-class CartSerializer(serializers.ModelSerializer):
-    items = serializers.SerializerMethodField()
-    total_cart_price = serializers.SerializerMethodField()
-
-    class Meta:
-        model = Cart
-        fields = ['id', 'user', 'session_id', 'created_at', 'updated_at', 'items', 'total_cart_price']
-        read_only_fields = ['user', 'session_id']
-
-    def get_items(self, obj):
-        cart_items = obj.items.all()
-        return CartItemSerializer(cart_items, many=True).data
-
-    def get_total_cart_price(self, obj):
-
-        return sum(item.product.price * item.quantity for item in obj.items.all())
+    def __str__(self):
+        return f"{self.quantity} x {self.product.title} in Cart {self.cart.id}"
