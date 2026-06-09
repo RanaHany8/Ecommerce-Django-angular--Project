@@ -1,0 +1,57 @@
+<div class="edit-wrapper">
+
+  <div class="edit-card">
+
+    <h1>Edit Product ✏️</h1>
+
+    <div class="form-group">
+
+      <label>Name</label>
+
+      <input
+        [(ngModel)]="product.name"
+        type="text">
+
+    </div>
+
+    <div class="form-group">
+
+      <label>Description</label>
+
+      <textarea
+        [(ngModel)]="product.description">
+      </textarea>
+
+    </div>
+
+    <div class="form-group">
+
+      <label>Price</label>
+
+      <input
+        [(ngModel)]="product.price"
+        type="number">
+
+    </div>
+
+    <div class="form-group">
+
+      <label>Stock</label>
+
+      <input
+        [(ngModel)]="product.stock"
+        type="number">
+
+    </div>
+
+    <button
+      class="save-btn"
+      (click)="saveProduct()">
+
+      Save Changes
+
+    </button>
+
+  </div>
+
+</div>

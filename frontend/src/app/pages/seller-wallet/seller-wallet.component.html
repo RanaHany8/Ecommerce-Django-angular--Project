@@ -1,0 +1,35 @@
+<div class="wallet-wrapper">
+
+  <div class="wallet-card" *ngIf="wallet">
+
+    <h1>Wallet 💰</h1>
+
+    <p class="subtitle">
+      Manage your seller balance
+    </p>
+
+    <div class="balance-box">
+
+      <h2>
+        {{ wallet.balance }} EGP
+      </h2>
+
+      <p>
+        Current Available Balance
+      </p>
+
+    </div>
+
+    <div class="info">
+
+      <span>Created:</span>
+
+      <strong>
+        {{ wallet.created_at | date:'mediumDate' }}
+      </strong>
+
+    </div>
+
+  </div>
+
+</div>

@@ -1,0 +1,74 @@
+<div class="payments-wrapper">
+
+  <div class="payments-card">
+
+    <h1>Payments 💳</h1>
+
+    <p class="subtitle">
+      Track all payment transactions
+    </p>
+
+    <div *ngIf="payments.length; else emptyState"
+         class="payments-grid">
+
+      <div
+        class="payment-item"
+        *ngFor="let payment of payments">
+
+        <h2>
+          {{ payment.amount }} EGP
+        </h2>
+
+        <div class="row">
+
+          <span>Method</span>
+
+          <strong>
+            {{ payment.payment_method }}
+          </strong>
+
+        </div>
+
+        <div class="row">
+
+          <span>Status</span>
+
+          <span
+            class="status"
+            [class.pending]="payment.status === 'pending'"
+            [class.paid]="payment.status === 'paid'"
+            [class.failed]="payment.status === 'failed'">
+
+            {{ payment.status }}
+
+          </span>
+
+        </div>
+
+        <div class="date">
+
+          {{ payment.created_at | date:'medium' }}
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <ng-template #emptyState>
+
+      <div class="empty-state">
+
+        <h3>No payments yet</h3>
+
+        <p>
+          Payment transactions will appear here.
+        </p>
+
+      </div>
+
+    </ng-template>
+
+  </div>
+
+</div>
